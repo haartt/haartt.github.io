@@ -10,6 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
 
+  <!-- Disable browser scroll restoration as early as possible so page always opens at top -->
+  <script>history.scrollRestoration = 'manual'; window.scrollTo(0, 0);</script>
+
   <style>
 
     /* ─────────────────────────────────────────
@@ -225,7 +228,7 @@
        section (justify-content: flex-end).
     ───────────────────────────────────────── */
     #hero {
-      min-height: 90vh;
+      min-height: 50vh;
       display:    flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -346,8 +349,7 @@
       -webkit-overflow-scrolling: touch; /* smooth momentum scroll on iOS */
       scrollbar-width: thin;
       scrollbar-color: var(--rule) transparent;
-      padding: 0 2.5rem 1rem;
-      margin:  0 -2.5rem; /* bleed to page edges */
+      padding-bottom: 1rem;
       scroll-snap-type: x proximity;
     }
     /* Custom scrollbar for webkit browsers */
@@ -359,6 +361,7 @@
       display: flex;
       gap:     0;
       width:   max-content; /* lets cards overflow without wrapping */
+      padding: 0 2.5rem;   /* alignment padding here, not on the overflow wrapper */
     }
 
     /* ─────────────────────────────────────────
@@ -370,6 +373,7 @@
     #life .section-intro { padding: 3rem 2.5rem 2rem; }
 
     .life-card {
+      position:    relative; /* needed for cert badge positioning */
       width:       clamp(280px, 30vw, 360px);
       border-left: 1px solid var(--rule);
       padding:     2rem;
@@ -380,6 +384,40 @@
       transition:  background 0.15s;
       scroll-snap-align: start;
     }
+
+    /* Badge row — absolute container, bottom-right of card */
+    .life-cert-badges {
+      position:    absolute;
+      bottom:      1rem;
+      right:       1rem;
+      display:     flex;
+      gap:         0.5rem;
+      align-items: center;
+    }
+    .life-cert-badge {
+      position:    relative; /* tooltip anchor */
+      font-size:   1rem;
+      cursor:      default;
+      line-height: 1;
+    }
+    .life-cert-badge::after {
+      content:        attr(data-tooltip);
+      position:       absolute;
+      bottom:         calc(100% + 6px);
+      right:          0;
+      white-space:    nowrap;
+      font-family:    var(--ff-mono);
+      font-size:      0.62rem;
+      letter-spacing: 0.06em;
+      color:          var(--text);
+      background:     var(--bg);
+      border:         1px solid var(--rule);
+      padding:        0.25rem 0.55rem;
+      opacity:        0;
+      pointer-events: none;
+      transition:     opacity 0.2s;
+    }
+    .life-cert-badge:hover::after { opacity: 1; }
     .life-card:last-child { border-right: 1px solid var(--rule); }
     .life-card:hover      { background: var(--hover-surface); }
 
@@ -513,16 +551,20 @@
 
     /* App icon box */
     .app-icon {
-      width:         44px;
-      height:        44px;
-      border-radius: 10px;
+      width:         72px;
+      height:        72px;
+      border-radius: 16px;
       margin-bottom: 1.5rem;
-      display:       flex;
-      align-items:   center;
-      justify-content: center;
-      font-size:     1.1rem;
-      border:        1px solid var(--rule);
+      display:       block;
       flex-shrink:   0;
+      overflow:      hidden;
+    }
+    /* Gradient placeholder for apps without a real icon */
+    .app-icon--placeholder {
+      background: linear-gradient(145deg, #555 0%, #e8e8e8 100%);
+    }
+    [data-theme="light"] .app-icon--placeholder {
+      background: linear-gradient(145deg, #aaa 0%, #111 100%);
     }
     .app-name {
       font-family:    var(--ff-display);
@@ -539,11 +581,45 @@
       color:          var(--muted);
       margin-bottom:  1rem;
     }
+    .app-bottom { margin-top: auto; } /* pushes content group to bottom of card */
     .app-desc {
-      font-size:   0.82rem;
-      line-height: 1.65;
-      color:       var(--muted);
-      margin-top:  auto; /* pushes description to bottom of card */
+      font-size:     0.82rem;
+      line-height:   1.65;
+      color:         var(--muted);
+      margin-bottom: 0.85rem;
+    }
+
+    /* Link buttons at bottom of app cards */
+    .app-links {
+      display:   flex;
+      gap:       0.4rem;
+      flex-wrap: wrap;
+    }
+    .app-link {
+      font-family:     var(--ff-mono);
+      font-size:       0.65rem;
+      letter-spacing:  0.08em;
+      text-transform:  uppercase;
+      text-decoration: none;
+      border:          1px solid;
+      padding:         0.22rem 0.55rem;
+      transition:      background 0.15s, color 0.15s;
+    }
+    /* GitHub */
+    .app-link--gh    { color: var(--text); border-color: var(--rule); }
+    .app-link--gh:hover { background: var(--hover-surface); }
+    /* TestFlight — active */
+    .app-link--tf    { color: var(--cod); border-color: var(--cod); }
+    .app-link--tf:hover { background: var(--cod); color: var(--bg); }
+    /* App Store */
+    .app-link--store { color: var(--mat); border-color: var(--mat); }
+    .app-link--store:hover { background: var(--mat); color: var(--bg); }
+    /* Greyed out — no link available */
+    .app-link--disabled {
+      color:          var(--muted);
+      border-color:   var(--rule);
+      opacity:        0.35;
+      pointer-events: none;
     }
 
     /* ─────────────────────────────────────────
@@ -794,7 +870,8 @@
       #projects .section-intro { padding: 2.5rem 1.25rem 1.5rem; }
 
       /* Horizontal scroll tracks: align with tighter page padding */
-      .hscroll-wrap { padding: 0 1.25rem 1rem; margin: 0 -1.25rem; }
+      .hscroll-wrap { padding-bottom: 1rem; }
+      .hscroll-track { padding: 0 1.25rem; }
 
       /* Featured project: stack columns vertically */
       .featured-layout { grid-template-columns: 1fr; gap: 2.5rem; }
@@ -832,7 +909,7 @@
 
     <!-- Right: section links + theme toggle -->
     <div class="nav-links">
-      <a href="#life">Background</a>
+      <a href="#life">About me</a>
       <a href="#music">Music</a>
       <a href="#projects">Apps</a>
       <a href="#featured">PocketChop</a>
@@ -876,11 +953,11 @@
       <div class="hero-right">
         <p class="hero-desc">
           Master's student in <strong>Materials Engineering</strong> at Federico II.
-          <strong>Electronic music producer</strong> since age 14, now training as a sound technician.
+          <strong>Electronic music producer</strong> since 14.
           <strong>Apple Developer Academy</strong> alumnus and Swift Student Challenge winner.
         </p>
         <p class="hero-desc" style="margin-top:0.75rem;">
-          Three fields. One brain.
+  
         </p>
         <div class="hero-location">Napoli, Italy · Open to Work</div>
       </div>
@@ -898,7 +975,7 @@
   <section id="life">
 
     <div class="section-intro reveal">
-      <p class="eyebrow">Background</p>
+      <p class="eyebrow">My Background</p>
       <h2 class="section-h" style="margin-bottom:0;">Life &amp;<br>Education</h2>
     </div>
 
@@ -907,10 +984,9 @@
 
         <!-- Card 1: Design & Drawing -->
         <div class="life-card reveal" role="listitem">
-          <div class="life-card-icon">✏️</div>
           <div class="life-card-stripe neutral"></div>
           <h3 class="life-card-title">Design &amp;<br>Drawing</h3>
-          <p class="life-card-text">Drawing and graphic design as a way of thinking. Visual ideas sketched before they're built. That habit of spatial reasoning shaped how I approach interfaces — the UI sensitivity came from the sketchbook, not a course.</p>
+          <p class="life-card-text">I started drawing as a child. Over time, it became a habit—I sketch constantly, and some sketches grow into something... </p>
           <div class="life-card-tags">
             <span class="life-tag">Visual Thinking</span>
             <span class="life-tag">UI Sensitivity</span>
@@ -920,10 +996,9 @@
 
         <!-- Card 2: First Computer -->
         <div class="life-card reveal" role="listitem">
-          <div class="life-card-icon">💻</div>
           <div class="life-card-stripe cod"></div>
           <h3 class="life-card-title">First<br>Computer</h3>
-          <p class="life-card-text">A gift from my father. That machine was the beginning of everything: taking apart software to see how it worked, teaching myself to code out of curiosity, building tools before I knew that's what they were called.</p>
+          <p class="life-card-text">A gift from my father. An eMachines portable notebook. I tweaked a lot with it had to break it multiple times before understanding how not to break it. </p>
           <div class="life-card-tags">
             <span class="life-tag">Self-Taught</span>
             <span class="life-tag">Curiosity</span>
@@ -933,19 +1008,35 @@
 
         <!-- Card 3: Liceo Scientifico -->
         <div class="life-card reveal" role="listitem">
-          <div class="life-card-icon">🏆</div>
           <div class="life-card-stripe mat"></div>
           <h3 class="life-card-title">Liceo<br>Scientifico</h3>
-          <p class="life-card-text">Graduated 99/100 from Liceo Tito Lucrezio Caro. First place in the Giochi d'Autunno mathematics competition (Centro Pristem, Bocconi) in 2015. The place where systematic thinking became second nature.</p>
+          <p class="life-card-text">Five years of maths, physics, latin, and existential dread. Liceo Tito Lucrezio Caro, Napoli.</p>
           <div class="life-card-tags">
             <span class="life-tag">Mathematics</span>
             <span class="life-tag">Scientific Method</span>
           </div>
+          <div class="life-cert-badges">
+            <span class="life-cert-badge" data-tooltip="1st place — Giochi d'Autunno, Mathematics (2015)">🏅</span>
+            <span class="life-cert-badge" data-tooltip="99/100 — almost...">📋</span>
+          </div>
         </div>
 
-        <!-- Card 4: Materials Engineering -->
+        <!-- Card 4: Birmingham -->
         <div class="life-card reveal" role="listitem">
-          <div class="life-card-icon">⚗️</div>
+          <div class="life-card-stripe neutral"></div>
+          <h3 class="life-card-title">Birmingham</h3>
+          <p class="life-card-text">Spent two weeks in Birmingham to sharpen English skills. Navigated the ring road, survived the weather, ate something beige. Came back fluent — allegedly.</p>
+          <div class="life-card-tags">
+            <span class="life-tag">English</span>
+            <span class="life-tag">Cultural Exchange</span>
+          </div>
+          <div class="life-cert-badges">
+            <span class="life-cert-badge" data-tooltip="C2 Cambridge Certification (2020)">🎖️</span>
+          </div>
+        </div>
+
+        <!-- Card 5: Materials Engineering -->
+        <div class="life-card reveal" role="listitem">
           <div class="life-card-stripe mat"></div>
           <h3 class="life-card-title">Materials<br>Engineering</h3>
           <p class="life-card-text">BSc in Materials Science &amp; Engineering from Federico II, graduating 101/110. Thesis on polyurethane foam acoustics. Now in the MSc, with a personal focus on the intersection of materials and sound.</p>
@@ -1000,7 +1091,7 @@
           <div class="music-card-label">Training</div>
           <div class="music-card-body">
             <h3 class="music-card-title">Sound<br>Technician</h3>
-            <p class="music-card-text">Currently completing a professional certification in sound for live performance and audiovisual media at ACTA Group, Napoli. Formalising what years of self-directed practice built.</p>
+            <p class="music-card-text">Currently completing a professional certification in sound for live performance and audiovisual media at Regione Campania, Napoli. It turned out to be a great learning experience.</p>
           </div>
         </div>
 
@@ -1018,66 +1109,114 @@
 
     <div class="section-intro reveal">
       <p class="eyebrow">Apple Developer Academy</p>
-      <h2 class="section-h" style="margin-bottom:0;">App<br>Projects</h2>
+      <h2 class="section-h" style="margin-bottom:0;">@<br>Apple Developer Academy</h2>
     </div>
 
     <div class="hscroll-wrap">
       <div class="hscroll-track" role="list">
 
+        <!-- 1 · Networks -->
         <div class="app-card reveal" role="listitem">
           <div class="app-card-top-stripe"></div>
-          <div class="app-icon" style="background:rgba(159,159,203,0.08);">🥁</div>
-          <div class="app-year">2026 · Swift Student Challenge</div>
-          <div class="app-name">PocketChop</div>
-          <div class="app-desc">Sample slicer and 64-step sequencer for iPad. Built in Swift Playgrounds.</div>
+          <div class="app-icon app-icon--placeholder"></div>
+          <div class="app-name">Networks</div>
+          <div class="app-bottom">
+            <div class="app-desc">Connect people with shared interests across different locations. Discover communities in your field.</div>
+            <div class="app-links">
+              <span class="app-link app-link--disabled">App Store</span>
+              <span class="app-link app-link--disabled">TestFlight</span>
+            </div>
+          </div>
         </div>
 
+        <!-- 2 · Compass -->
         <div class="app-card reveal" role="listitem">
           <div class="app-card-top-stripe"></div>
-          <div class="app-icon" style="background:rgba(111,168,154,0.08);">🌿</div>
-          <div class="app-year">2025 · Academy Project</div>
-          <div class="app-name">Bonsai</div>
-          <div class="app-desc">Habit tracker with a living visual metaphor — your consistency grows a tree.</div>
+          <div class="app-icon app-icon--placeholder"></div>
+          <div class="app-name">Compass</div>
+          <div class="app-bottom">
+            <div class="app-desc">Daily fortune app powered by FoundationModels — fully local and offline. No server, no tracking.</div>
+            <div class="app-links">
+              <a href="https://github.com/haartt/Quotes" target="_blank" rel="noopener" class="app-link app-link--gh">GitHub ↗</a>
+              <span class="app-link app-link--disabled">TestFlight</span>
+            </div>
+          </div>
         </div>
 
+        <!-- 3 · Storease -->
         <div class="app-card reveal" role="listitem">
           <div class="app-card-top-stripe"></div>
-          <div class="app-icon" style="background:rgba(201,159,110,0.08);">🎨</div>
-          <div class="app-year">2025 · Academy Project</div>
-          <div class="app-name">Chromia</div>
-          <div class="app-desc">Color-theory learning app for kids using ARKit to scan the real world.</div>
+          <div class="app-icon">
+            <img src="Resources/Academy/3.png" alt="Storease icon" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="app-name">Storease</div>
+          <div class="app-bottom">
+            <div class="app-desc">Point your camera at a photo — Vision + FoundationModels generate branching story options on device. Memories become narrative.</div>
+            <div class="app-links">
+              <span class="app-link app-link--disabled">App Store</span>
+              <a href="https://testflight.apple.com/join/sT3aReAsE" target="_blank" rel="noopener" class="app-link app-link--tf">TestFlight ↗</a>
+            </div>
+          </div>
         </div>
 
+        <!-- 4 · HeritageExplorer -->
         <div class="app-card reveal" role="listitem">
           <div class="app-card-top-stripe"></div>
-          <div class="app-icon" style="background:rgba(159,159,203,0.08);">🔭</div>
-          <div class="app-year">2024 · Academy Project</div>
-          <div class="app-name">Stellarion</div>
-          <div class="app-desc">Interactive AR star map that teaches constellations through exploration.</div>
+          <div class="app-icon app-icon--placeholder"></div>
+          <div class="app-name">Heritage Explorer</div>
+          <div class="app-bottom">
+            <div class="app-desc">AR experience that layers historical context over your surroundings. Project paused — reach out if you want to continue it.</div>
+            <div class="app-links">
+              <span class="app-link app-link--disabled">App Store</span>
+              <a href="https://testflight.apple.com/join/hErItAgE0" target="_blank" rel="noopener" class="app-link app-link--tf">TestFlight ↗</a>
+            </div>
+          </div>
         </div>
 
+        <!-- 5 · 2089: The Breaking Point -->
         <div class="app-card reveal" role="listitem">
           <div class="app-card-top-stripe"></div>
-          <div class="app-icon" style="background:rgba(111,168,154,0.08);">🧩</div>
-          <div class="app-year">2024 · Academy Project</div>
-          <div class="app-name">Moduli</div>
-          <div class="app-desc">Visual algebra blocks for middle-school students. Equations you can touch.</div>
+          <div class="app-icon">
+            <img src="Resources/Academy/5.png" alt="2089 icon" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="app-name">2089</div>
+          <div class="app-bottom">
+            <div class="app-desc">Decision-making game set at humanity's breaking point. Three factions, one player — your choices shape the outcome.</div>
+            <div class="app-links">
+              <span class="app-link app-link--disabled">App Store</span>
+              <a href="https://testflight.apple.com/join/2O89bRkPt" target="_blank" rel="noopener" class="app-link app-link--tf">TestFlight ↗</a>
+            </div>
+          </div>
         </div>
 
+        <!-- 6 · Zest -->
         <div class="app-card reveal" role="listitem">
           <div class="app-card-top-stripe"></div>
-          <div class="app-icon" style="background:rgba(201,159,110,0.08);">🗺️</div>
-          <div class="app-year">2024 · Academy Project</div>
-          <div class="app-name">Traccia</div>
-          <div class="app-desc">Urban storytelling — annotate city walks with audio fragments and share routes.</div>
+          <div class="app-icon app-icon--placeholder"></div>
+          <div class="app-name">Zest</div>
+          <div class="app-bottom">
+            <div class="app-desc">Running app that modulates audio playback parameters in real time based on your movement. Motion becomes the instrument.</div>
+            <div class="app-links">
+              <span class="app-link app-link--disabled">App Store</span>
+              <span class="app-link app-link--disabled">TestFlight</span>
+            </div>
+          </div>
         </div>
 
+        <!-- 7 · Tinto -->
         <div class="app-card reveal" role="listitem">
           <div class="app-card-top-stripe"></div>
-          <div class="app-icon" style="background:rgba(159,159,203,0.08);">🎲</div>
-          <div class="app-year">2024 · Academy Project</div>
-          <div class="app-name">Dado</div>
-          <div class="app-desc">Narrative game engine in SpriteKit. Generative AI writes the story branches.</div>
+          <div class="app-icon">
+            <img src="Resources/Academy/7.png" alt="Tinto icon" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="app-name">Tinto</div>
+          <div class="app-bottom">
+            <div class="app-desc">Museum companion for kids. Scan any artwork, extract its palette, mix primary colours to unlock each shade.</div>
+            <div class="app-links">
+              <a href="https://apps.apple.com/in/app/tinto-your-museum-buddy/id6777824863" target="_blank" rel="noopener" class="app-link app-link--store">App Store ↗</a>
+              <a href="https://testflight.apple.com/join/9Qy3SEjM" target="_blank" rel="noopener" class="app-link app-link--tf">TestFlight ↗</a>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -1150,17 +1289,14 @@
 
     <div class="contact-top reveal">
       <div class="contact-cta">
-        What's<br>next? <em>Let's</em><br>grow together.
-      </div>
-      <div class="contact-sub">
-        Open to work in materials, sound, iOS — or any project that sits across all three. Based in Napoli, available remotely.
+        What's<br>next?
       </div>
     </div>
 
     <div class="contact-links-row reveal">
-      <a href="mailto:fabioantonucci6@gmail.com" class="contact-link-block">
+      <a href="mailto:fabioantonucci6@icloud.com" class="contact-link-block">
         <span class="contact-link-label">Email</span>
-        <span class="contact-link-val">fabioantonucci6@gmail.com <span class="contact-link-arrow">↗</span></span>
+        <span class="contact-link-val">fabioantonucci6@icloud.com <span class="contact-link-arrow">↗</span></span>
       </a>
       <a href="https://www.linkedin.com/in/fabio-antonucci-8008522a6/" target="_blank" rel="noopener" class="contact-link-block">
         <span class="contact-link-label">LinkedIn</span>
@@ -1168,11 +1304,11 @@
       </a>
       <a href="https://instagram.com" target="_blank" rel="noopener" class="contact-link-block">
         <span class="contact-link-label">Instagram</span>
-        <span class="contact-link-val">@fabio <span class="contact-link-arrow">↗</span></span>
+        <span class="contact-link-val">@its.haartt <span class="contact-link-arrow">↗</span></span>
       </a>
       <a href="https://github.com" target="_blank" rel="noopener" class="contact-link-block">
         <span class="contact-link-label">GitHub</span>
-        <span class="contact-link-val">fabio-antonucci <span class="contact-link-arrow">↗</span></span>
+        <span class="contact-link-val">haartt <span class="contact-link-arrow">↗</span></span>
       </a>
     </div>
 
@@ -1189,13 +1325,6 @@
 
 
   <script>
-    // ─── Force scroll to top on every page load ───────────────────────────
-    // Prevents the browser from restoring the last scroll position,
-    // which would break the navbar brand state on reload.
-    history.scrollRestoration = 'manual';
-    window.scrollTo(0, 0);
-
-
     // ─── Theme toggle (Light ↔ Dark) ──────────────────────────────────────
     // Reads saved preference from localStorage on load.
     // On click, flips the data-theme attribute on <html> and saves the choice.

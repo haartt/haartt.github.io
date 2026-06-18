@@ -53,7 +53,14 @@
       "Bash(awk '/<!-- FOOTER/,/<\\\\/footer>/{printf \"%d: %s\\\\n\", NR, \\(length\\($0\\)>400 ? \"[img \"length\\($0\\)\" chars] \"substr\\($0,1,70\\) : $0\\)}' fabio-portfolio.html)",
       "Bash(awk 'NR>=313 && NR<=330 {printf \"%d: %s\\\\n\", NR, \\(length\\($0\\)>400 ? \"[img \"length\\($0\\)\" chars] \"substr\\($0,1,75\\) : $0\\)}' fabio-portfolio.html)",
       "Bash(rm -rf Resources/.web)",
-      "Bash(sips *)"
+      "Bash(sips *)",
+      "Bash(grep -v '^$')",
+      "Bash(python3 *)",
+      "Bash(rm -f .DS_Store CV.png HartCharacter.blend Profile.pdf ReferenceWebPortfolio.png hartFaceSticker.png myFirstComputer.jpg)",
+      "Bash(rm -f Academy/.DS_Store Academy/5poster.png Academy/5rec.mov Academy/data.rtf)",
+      "Bash(rm -rf \"Academy/6 Steps\")",
+      "Bash(rm -f \"Life&Education/.DS_Store\")",
+      "Bash(rm -rf \"Life&Education\")"
     ]
   }
 }
