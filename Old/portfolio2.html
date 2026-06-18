@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fabio Antonucci</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root,[data-theme="dark"]{
+  --bg:#000;
+  --text:#fff;
+  --muted:#888;
+  --accent:#6ecff6;
+  --mat:#6FA89A;
+  --snd:#C99F6E;
+  --cod:#9C9CCB;
+  --rule:rgba(255,255,255,0.12);
+  --hover-surface:rgba(255,255,255,0.03);
+  --logo-filter:none;
+  --ff-display:'Anton',sans-serif;
+  --ff-body:'IBM Plex Sans',sans-serif;
+  --ff-mono:'IBM Plex Mono',monospace;
+}
+[data-theme="light"]{
+  --bg:#fff;
+  --text:#000;
+  --muted:#555;
+  --accent:#0284c7;
+  --rule:rgba(0,0,0,0.12);
+  --hover-surface:rgba(0,0,0,0.03);
+  --logo-filter:invert(1);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--ff-body);overflow-x:hidden;}
+
+/* ── SPLASH (tee artwork, full size, scroll through it) ── */
+#splash{
+  width:100%;
+  display:block;
+  background:var(--bg);
+  position:relative;
+}
+.splash-art{
+  display:block;user-select:none;
+  width:100%;
+  height:auto;
+}
+[data-theme="dark"] .splash-art--light{display:none;}
+[data-theme="light"] .splash-art--dark{display:none;}
+
+/* ── SPLASH SCROLL HINT ── */
+.splash-hint{
+  position:fixed;
+  bottom:1.5rem;left:50%;
+  transform:translateX(-50%);
+  z-index:55;
+  font-family:var(--ff-mono);font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--text);
+  display:flex;flex-direction:column;align-items:center;gap:0.4rem;
+  opacity:1;transition:opacity 0.3s ease;
+  pointer-events:none;
+  mix-blend-mode:difference;
+}
+.splash-hint.hidden{opacity:0;}
+.splash-hint .arrow{
+  width:14px;height:14px;
+  border-right:1px solid var(--text);border-bottom:1px solid var(--text);
+  transform:rotate(45deg);
+  animation:bob 1.6s ease-in-out infinite;
+}
+@keyframes bob{
+  0%,100%{transform:rotate(45deg) translate(0,0);}
+  50%{transform:rotate(45deg) translate(3px,3px);}
+}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle{
+  position:fixed;top:1.25rem;left:1.25rem;z-index:60;
+  font-family:var(--ff-mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--text);background:transparent;border:1px solid var(--rule);
+  padding:0.35rem 0.6rem;cursor:pointer;pointer-events:auto;
+  transition:background 0.15s,color 0.15s;
+  mix-blend-mode:difference;
+}
+.theme-toggle:hover{background:var(--hover-surface);}
+
+/* ── FIXED FRAME (brutalist corners, visible after splash) ── */
+.site-frame{
+  position:fixed;inset:0;pointer-events:none;z-index:50;
+  opacity:0;transition:opacity 0.4s ease;
+}
+.site-frame.visible{opacity:1;}
+.frame-time{
+  position:absolute;top:1.35rem;right:1.25rem;
+  font-family:var(--ff-mono);font-size:0.7rem;letter-spacing:0.08em;
+  color:var(--text);text-transform:uppercase;
+}
+.frame-social{
+  position:absolute;bottom:1.25rem;left:1.25rem;
+  display:flex;gap:1rem;pointer-events:auto;
+}
+.frame-social a{
+  color:var(--text);text-decoration:none;font-size:0.75rem;
+  font-family:var(--ff-mono);letter-spacing:0.05em;
+  border-bottom:1px solid transparent;transition:border-color 0.15s;
+}
+.frame-social a:hover{border-color:var(--text);}
+.frame-badge{
+  position:absolute;bottom:1rem;right:1rem;
+  width:clamp(72px,10vw,96px);height:clamp(72px,10vw,96px);
+  animation:spin 24s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.frame-badge svg{width:100%;height:100%;fill:var(--text);}
+
+/* ── HERO (logo left + name right) ── */
+#hero{
+  min-height:100vh;min-height:100dvh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:5rem 2.5rem 6rem;
+  border-bottom:1px solid var(--rule);
+  position:relative;
+}
+.hero-bar{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:1.5rem;margin-bottom:3rem;
+}
+.hero-bar .bar-logo{flex-shrink:0;}
+.hero-bar .bar-logo img{
+  width:clamp(56px,10vw,96px);height:auto;display:block;
+  filter:var(--logo-filter);
+}
+.hero-name{
+  font-family:var(--ff-display);
+  font-size:clamp(3.5rem,14vw,11rem);
+  line-height:0.82;letter-spacing:-0.01em;
+  text-transform:uppercase;text-align:right;
+}
+.hero-name span{display:block;}
+.hero-subtitle{
+  font-family:var(--ff-mono);font-size:0.7rem;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--muted);text-align:right;
+  margin-top:0.5rem;
+}
+.hero-bio{
+  max-width:42rem;margin-left:auto;
+  font-size:clamp(0.95rem,1.4vw,1.1rem);line-height:1.75;
+}
+.hero-bio p + p{margin-top:1.25rem;}
+.hero-bio .uline{
+  text-decoration:underline;text-decoration-color:var(--accent);
+  text-underline-offset:3px;text-decoration-thickness:1px;
+}
+.hero-tags{
+  display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:2rem;justify-content:flex-end;
+}
+.field-tag{
+  font-family:var(--ff-mono);font-size:0.6rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;
+  padding:0.35rem 0.7rem;border:1px solid var(--rule);
+}
+.field-tag.mat{color:var(--mat);border-color:var(--mat);}
+.field-tag.snd{color:var(--snd);border-color:var(--snd);}
+.field-tag.cod{color:var(--cod);border-color:var(--cod);}
+
+/* ── INLINE NAV ── */
+.site-nav{
+  display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+  padding:1rem 2.5rem;border-bottom:1px solid var(--rule);
+  position:sticky;top:0;z-index:40;background:var(--bg);
+}
+.site-nav .nav-logo img{width:28px;height:auto;display:block;filter:var(--logo-filter);}
+.site-nav .nav-logo{margin-right:auto;}
+.site-nav a{
+  font-family:var(--ff-mono);font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+}
+.site-nav a:hover{color:var(--text);}
+
+/* ── SECTION SHARED ── */
+section{padding:5rem 2.5rem;}
+.section-eyebrow{
+  font-family:var(--ff-mono);font-size:0.65rem;font-weight:500;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:2.5rem;
+}
+.section-title{
+  font-family:var(--ff-display);
+  font-size:clamp(2rem,6vw,4.5rem);
+  font-weight:400;letter-spacing:0.01em;line-height:0.95;
+  text-transform:uppercase;margin-bottom:3rem;
+}
+
+/* ── DOMAINS ── */
+#domains{border-top:1px solid var(--rule);}
+.domains-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:0;border:1px solid var(--rule);
+}
+.domain-card{
+  padding:2rem 1.75rem 2.5rem;
+  border-right:1px solid var(--rule);
+  position:relative;
+}
+.domain-card:last-child{border-right:none;}
+.domain-card:hover{background:var(--hover-surface);}
+.domain-stripe{position:absolute;top:0;left:0;right:0;height:2px;}
+.domain-stripe.mat{background:var(--mat);}
+.domain-stripe.snd{background:var(--snd);}
+.domain-stripe.cod{background:var(--cod);}
+.domain-label{
+  font-family:var(--ff-mono);font-size:0.6rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;
+  margin-bottom:1.25rem;
+}
+.domain-label.mat{color:var(--mat);}
+.domain-label.snd{color:var(--snd);}
+.domain-label.cod{color:var(--cod);}
+.domain-name{
+  font-family:var(--ff-display);font-size:1.5rem;font-weight:400;
+  line-height:1;text-transform:uppercase;margin-bottom:1rem;
+}
+.domain-desc{font-size:0.85rem;color:var(--muted);line-height:1.7;margin-bottom:1.75rem;}
+.domain-tools{display:flex;flex-wrap:wrap;gap:0.35rem;}
+.tool-chip{
+  font-family:var(--ff-mono);font-size:0.58rem;letter-spacing:0.06em;text-transform:uppercase;
+  padding:0.2rem 0.5rem;border:1px solid var(--rule);color:var(--muted);
+}
+
+/* ── TIMELINE ── */
+#timeline{border-top:1px solid var(--rule);}
+.timeline-grid{
+  display:grid;grid-template-columns:180px 1fr;gap:0;
+  border-left:1px solid var(--rule);
+}
+.tl-entry{display:contents;}
+.tl-period{
+  font-family:var(--ff-mono);font-size:0.65rem;letter-spacing:0.04em;
+  color:var(--muted);padding:1.5rem 1.5rem 1.5rem 0;
+  border-bottom:1px solid var(--rule);grid-column:1;
+}
+.tl-body{
+  padding:1.5rem 0 1.5rem 1.75rem;
+  border-bottom:1px solid var(--rule);border-left:1px solid var(--rule);
+  grid-column:2;
+}
+.tl-role{font-family:var(--ff-display);font-size:1.05rem;text-transform:uppercase;margin-bottom:0.2rem;}
+.tl-org{font-size:0.78rem;color:var(--muted);margin-bottom:0.5rem;}
+.tl-note{font-size:0.78rem;color:var(--muted);line-height:1.65;}
+.tl-domain{
+  display:inline-block;font-family:var(--ff-mono);font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;
+  padding:0.15rem 0.45rem;border:1px solid;margin-bottom:0.5rem;
+}
+.tl-domain.mat{color:var(--mat);border-color:var(--mat);}
+.tl-domain.snd{color:var(--snd);border-color:var(--snd);}
+.tl-domain.cod{color:var(--cod);border-color:var(--cod);}
+
+/* ── SKILLS ── */
+#skills{border-top:1px solid var(--rule);}
+.skills-columns{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;}
+.skill-group h4{
+  font-family:var(--ff-mono);font-size:0.6rem;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:0.85rem;padding-bottom:0.65rem;
+  border-bottom:1px solid var(--rule);
+}
+.skill-list{list-style:none;display:flex;flex-direction:column;gap:0.45rem;}
+.skill-list li{font-size:0.82rem;display:flex;align-items:center;gap:0.55rem;}
+.skill-list li::before{content:"—";color:var(--muted);font-family:var(--ff-mono);font-size:0.7rem;}
+
+/* ── CONTACT ── */
+#contact{
+  border-top:1px solid var(--rule);
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:5rem 2.5rem;flex-wrap:wrap;gap:2rem;
+}
+.contact-cta{
+  font-family:var(--ff-display);
+  font-size:clamp(2rem,5vw,4rem);
+  line-height:0.9;text-transform:uppercase;
+}
+.contact-cta em{font-style:normal;color:var(--muted);}
+.contact-links{display:flex;flex-direction:column;gap:0.65rem;align-items:flex-end;}
+.contact-links a{
+  font-family:var(--ff-mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--text);text-decoration:none;border-bottom:1px solid var(--rule);
+  padding-bottom:2px;transition:border-color 0.15s;
+}
+.contact-links a:hover{border-color:var(--text);}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--rule);padding:1.5rem 2.5rem;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+}
+.footer-left{font-family:var(--ff-mono);font-size:0.65rem;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;}
+.footer-logo{width:40px;height:auto;opacity:0.9;filter:var(--logo-filter);}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.5s ease,transform 0.5s ease;}
+.reveal.in{opacity:1;transform:none;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  #hero{padding:4.5rem 1.25rem 4rem;}
+  .hero-bar{flex-direction:column;align-items:flex-start;}
+  .hero-name{text-align:left;font-size:clamp(2.8rem,16vw,5rem);}
+  .hero-subtitle{text-align:left;}
+  .hero-bio{margin-left:0;}
+  .hero-tags{justify-content:flex-start;}
+  section{padding:3.5rem 1.25rem;}
+  .site-nav{padding:0.85rem 1.25rem;}
+  .domains-grid{grid-template-columns:1fr;}
+  .domain-card{border-right:none;border-bottom:1px solid var(--rule);}
+  .domain-card:last-child{border-bottom:none;}
+  .timeline-grid{grid-template-columns:1fr;}
+  .tl-period{padding:1.25rem 0 0.25rem;border-bottom:none;}
+  .tl-body{padding:0 0 1.25rem 1rem;border-left:1px solid var(--rule);}
+  .skills-columns{grid-template-columns:1fr 1fr;}
+  #contact{flex-direction:column;align-items:flex-start;}
+  .contact-links{align-items:flex-start;}
+  .frame-social{flex-direction:column;gap:0.4rem;}
+}
+@media(max-width:480px){
+  .skills-columns{grid-template-columns:1fr;}
+  .frame-badge{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH: tee artwork at full natural size — scroll through the whole thing -->
+<button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme">Light</button>
+<section id="splash" aria-label="Artwork">
+  <img class="splash-art splash-art--dark" src="Resources/hartHouseTeeINV.png" alt="HART house tee artwork" width="3508" height="4961" fetchpriority="high"/>
+  <img class="splash-art splash-art--light" src="Resources/hartHouseTee.png" alt="HART house tee artwork" width="3508" height="4961" loading="lazy"/>
+</section>
+<div class="splash-hint" id="splash-hint" aria-hidden="true">
+  <span>Scroll</span>
+  <span class="arrow"></span>
+</div>
+
+<!-- Fixed brutalist frame (corners, visible after splash) -->
+<div class="site-frame" id="site-frame" aria-hidden="true">
+  <div class="frame-time" id="frame-time">IT · —</div>
+  <nav class="frame-social" aria-label="Social links">
+    <a href="mailto:fabioantonucci6@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/fabio-antonucci-8008522a6/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="tel:+393338280335">Phone</a>
+  </nav>
+  <div class="frame-badge" aria-hidden="true">
+    <svg viewBox="0 0 100 100">
+      <defs>
+        <path id="badge-circle" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"/>
+      </defs>
+      <text font-family="IBM Plex Mono, monospace" font-size="8.5" letter-spacing="2">
+        <textPath href="#badge-circle">NAPOLI · ITALY · OPEN TO WORK · </textPath>
+      </text>
+    </svg>
+  </div>
+</div>
+
+<!-- HERO: logo left, name right -->
+<section id="hero">
+  <div class="hero-bar">
+    <a href="#splash" class="bar-logo" aria-label="Back to artwork">
+      <img src="Resources/hartFaceSticker.png" alt="HART" width="96" height="96"/>
+    </a>
+    <div>
+      <h1 class="hero-name"><span>Fabio</span><span>Antonucci</span></h1>
+      <p class="hero-subtitle">Materials · Sound · Code</p>
+    </div>
+  </div>
+
+  <div class="hero-bio">
+    <p>Hey — I'm Fabio Antonucci, from Napoli, Italy. <span class="uline">Materials engineer</span>, <span class="uline">music producer</span>, and occasional <span class="uline">creative coder</span>.</p>
+    <p>Master's student in Materials Engineering at Federico II. Self-taught electronic music since 2016, now training as a sound technician. Apple Developer Academy alumnus — I build iOS apps when the engineering lab gets quiet.</p>
+    <p>Three fields, one brain. <span class="uline">Cheers.</span></p>
+    <div class="hero-tags">
+      <span class="field-tag mat">Materials Engineering</span>
+      <span class="field-tag snd">Music &amp; Sound</span>
+      <span class="field-tag cod">iOS / Creative Code</span>
+    </div>
+  </div>
+</section>
+
+<nav class="site-nav" aria-label="Page sections">
+  <a href="#hero" class="nav-logo"><img src="Resources/hartFaceSticker.png" alt="HART" width="28" height="28"/></a>
+  <a href="#domains">Fields</a>
+  <a href="#timeline">Timeline</a>
+  <a href="#skills">Tools</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<!-- DOMAINS -->
+<section id="domains">
+  <p class="section-eyebrow reveal">What I work in</p>
+  <div class="domains-grid">
+    <div class="domain-card reveal">
+      <div class="domain-stripe mat"></div>
+      <p class="domain-label mat">Materials Engineering</p>
+      <h3 class="domain-name">Physical World,<br>Engineered</h3>
+      <p class="domain-desc">BSc in Materials Science &amp; Engineering from Federico II Napoli, now pursuing an MSc in Materials Engineering at the same university. Lab experience in absorption spectroscopy, mechanical testing, superconductor synthesis, and polyurethane foam acoustics.</p>
+      <div class="domain-tools">
+        <span class="tool-chip">COMSOL</span>
+        <span class="tool-chip">MATLAB</span>
+        <span class="tool-chip">AutoCAD</span>
+        <span class="tool-chip">Ashby methodology</span>
+        <span class="tool-chip">LCA</span>
+      </div>
+    </div>
+    <div class="domain-card reveal">
+      <div class="domain-stripe snd"></div>
+      <p class="domain-label snd">Music &amp; Sound</p>
+      <h3 class="domain-name">Electronic Music,<br>Visual Systems</h3>
+      <p class="domain-desc">Self-taught electronic music producer since 2016. From purely audio work the practice expanded into audio-visual performance and real-time generative systems via TouchDesigner — where sound becomes geometry. Currently training as a Sound Technician in audiovisual production.</p>
+      <div class="domain-tools">
+        <span class="tool-chip">Ableton Live</span>
+        <span class="tool-chip">Logic Pro</span>
+        <span class="tool-chip">FL Studio</span>
+        <span class="tool-chip">TouchDesigner</span>
+        <span class="tool-chip">Pro Tools</span>
+      </div>
+    </div>
+    <div class="domain-card reveal">
+      <div class="domain-stripe cod"></div>
+      <p class="domain-label cod">Creative Coding</p>
+      <h3 class="domain-name">iOS Apps,<br>Interactive Tools</h3>
+      <p class="domain-desc">Apple Developer Academy alumnus. Built iOS apps bridging art, children's education, and generative AI — including a Swift Student Challenge winner. Comfortable across SwiftUI, SpriteKit, Vision, ARKit, and the FoundationModels framework. CTF security competitions on the side.</p>
+      <div class="domain-tools">
+        <span class="tool-chip">SwiftUI</span>
+        <span class="tool-chip">Xcode</span>
+        <span class="tool-chip">C++</span>
+        <span class="tool-chip">Blender</span>
+        <span class="tool-chip">SonicPi</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section id="timeline">
+  <p class="section-eyebrow reveal">Timeline</p>
+  <h2 class="section-title reveal">Education &amp;<br>Experience</h2>
+  <div class="timeline-grid">
+    <div class="tl-entry reveal">
+      <div class="tl-period">Oct 2024 — present</div>
+      <div class="tl-body">
+        <span class="tl-domain snd">Sound</span>
+        <div class="tl-role">Sound Technician — Audiovisual Production</div>
+        <div class="tl-org">Regione Campania / ACTA Group · Napoli</div>
+        <div class="tl-note">Professional certification course in sound for live performance and audiovisual media.</div>
+      </div>
+    </div>
+    <div class="tl-entry reveal">
+      <div class="tl-period">Mar 2024 — present</div>
+      <div class="tl-body">
+        <span class="tl-domain mat">Materials</span>
+        <div class="tl-role">MSc — Materials Engineering</div>
+        <div class="tl-org">Università degli Studi di Napoli Federico II · Napoli</div>
+        <div class="tl-note">Graduate study in materials engineering, with a personal focus on materials acoustics and sound.</div>
+      </div>
+    </div>
+    <div class="tl-entry reveal">
+      <div class="tl-period">Sep 2020 — Sep 2024</div>
+      <div class="tl-body">
+        <span class="tl-domain mat">Materials</span>
+        <div class="tl-role">BSc — Materials Science &amp; Engineering (L-09)</div>
+        <div class="tl-org">Università degli Studi di Napoli Federico II · Napoli</div>
+        <div class="tl-note">Final grade 101/110. Thesis: <em>"Porous sound-absorbing materials for acoustic room treatment: polyol-isocyanate foams."</em></div>
+      </div>
+    </div>
+    <div class="tl-entry reveal">
+      <div class="tl-period">2024 — present</div>
+      <div class="tl-body">
+        <span class="tl-domain cod">Code</span>
+        <div class="tl-role">Apple Developer Academy</div>
+        <div class="tl-org">Napoli</div>
+        <div class="tl-note">Built iOS apps across multiple challenges; Swift Student Challenge winner. Focus on SwiftUI, ARKit, Vision framework, FoundationModels.</div>
+      </div>
+    </div>
+    <div class="tl-entry reveal">
+      <div class="tl-period">Jul 2015 — present</div>
+      <div class="tl-body">
+        <span class="tl-domain snd">Sound</span>
+        <div class="tl-role">Electronic Music Producer</div>
+        <div class="tl-org">Freelance · Napoli</div>
+        <div class="tl-note">Self-taught since age 14. DAW-native production expanded into live audio-visual work and generative performance via TouchDesigner.</div>
+      </div>
+    </div>
+    <div class="tl-entry reveal">
+      <div class="tl-period">2015 — 2020</div>
+      <div class="tl-body">
+        <span class="tl-domain mat">Education</span>
+        <div class="tl-role">Diploma di Maturità Scientifica</div>
+        <div class="tl-org">Liceo Scientifico Tito Lucrezio Caro · Napoli</div>
+        <div class="tl-note">Final grade 99/100. First-place finish in Giochi d'Autunno mathematics competition (Centro Pristem, Bocconi), category C2 (2015).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-eyebrow reveal">Tools &amp; Skills</p>
+  <h2 class="section-title reveal">What I use</h2>
+  <div class="skills-columns">
+    <div class="skill-group reveal">
+      <h4>Audio &amp; Visual</h4>
+      <ul class="skill-list">
+        <li>Ableton Live</li>
+        <li>Logic Pro</li>
+        <li>FL Studio</li>
+        <li>Pro Tools</li>
+        <li>TouchDesigner</li>
+        <li>Premiere Pro</li>
+        <li>Blender</li>
+      </ul>
+    </div>
+    <div class="skill-group reveal">
+      <h4>Engineering &amp; Science</h4>
+      <ul class="skill-list">
+        <li>COMSOL Multiphysics</li>
+        <li>MathWorks MATLAB</li>
+        <li>AutoCAD</li>
+        <li>TA Instruments TRIOS</li>
+      </ul>
+    </div>
+    <div class="skill-group reveal">
+      <h4>Code &amp; Design</h4>
+      <ul class="skill-list">
+        <li>SwiftUI / Xcode</li>
+        <li>VS Code</li>
+        <li>Sketch</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-cta reveal">Let's build<br><em>something</em><br>together.</div>
+  <div class="contact-links reveal">
+    <a href="mailto:fabioantonucci6@gmail.com">fabioantonucci6@gmail.com</a>
+    <a href="https://www.linkedin.com/in/fabio-antonucci-8008522a6/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="tel:+393338280335">+39 333 82 80 335</a>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-left">Fabio Antonucci · Napoli · 2025</span>
+  <img class="footer-logo" src="Resources/hartFaceSticker.png" alt="" width="40" height="40"/>
+</footer>
+
+<script>
+// Theme toggle (dark = INV tee on black, light = tee on white)
+const root = document.documentElement;
+const themeBtn = document.getElementById('theme-toggle');
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'light' || savedTheme === 'dark') root.dataset.theme = savedTheme;
+
+function syncThemeLabel() {
+  if (!themeBtn) return;
+  themeBtn.textContent = root.dataset.theme === 'light' ? 'Dark' : 'Light';
+}
+syncThemeLabel();
+
+themeBtn?.addEventListener('click', () => {
+  const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+  root.dataset.theme = next;
+  localStorage.setItem('theme', next);
+  syncThemeLabel();
+});
+
+// Show fixed frame + hide scroll hint once past splash
+const splash = document.getElementById('splash');
+const siteFrame = document.getElementById('site-frame');
+const splashHint = document.getElementById('splash-hint');
+const frameObserver = new IntersectionObserver(([entry]) => {
+  const pastSplash = !entry.isIntersecting;
+  siteFrame.classList.toggle('visible', pastSplash);
+  splashHint?.classList.toggle('hidden', entry.intersectionRatio < 0.85);
+}, { threshold: [0, 0.15, 0.85, 1] });
+frameObserver.observe(splash);
+
+// Live Napoli time
+function updateTime() {
+  const el = document.getElementById('frame-time');
+  if (!el) return;
+  const t = new Date().toLocaleTimeString('en-GB', {
+    timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit', hour12: true
+  });
+  el.textContent = 'IT · ' + t;
+}
+updateTime();
+setInterval(updateTime, 30000);
+
+// Scroll reveal
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  el.style.transitionDelay = (i % 4) * 0.07 + 's';
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
