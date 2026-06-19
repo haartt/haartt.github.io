@@ -1,3 +1,7 @@
 # Fabio Antonucci — Portfolio
 
-[![Visit Site](https://img.shields.io/badge/Visit%20Site-haartt.github.io-black?style=for-the-badge)](https://haartt.github.io)
+<p align="center">
+  <a href="index.html">
+    <img src="https://img.shields.io/badge/Open%20Portfolio-black?style=for-the-badge" width="320" />
+  </a>
+</p>
