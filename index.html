@@ -395,10 +395,14 @@
       align-items: center;
     }
     .life-cert-badge {
-      position:    relative; /* tooltip anchor */
-      font-size:   1rem;
-      cursor:      default;
-      line-height: 1;
+      position:       relative; /* tooltip anchor */
+      font-size:      1rem;
+      cursor:         pointer;
+      line-height:    1;
+      padding:        0.5rem;
+      margin:         -0.5rem;
+      touch-action:   manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     .life-cert-badge::after {
       content:        attr(data-tooltip);
@@ -417,7 +421,8 @@
       pointer-events: none;
       transition:     opacity 0.2s;
     }
-    .life-cert-badge:hover::after { opacity: 1; }
+    .life-cert-badge:hover::after  { opacity: 1; }
+    .life-cert-badge.active::after { opacity: 1; }
     .life-card:last-child { border-right: 1px solid var(--rule); }
     .life-card:hover      { background: var(--hover-surface); }
 
@@ -1046,6 +1051,9 @@
             <span class="life-tag">Problem Solving</span>
             <span class="life-tag">Lab Work</span>
           </div>
+          <div class="life-cert-badges">
+            <span class="life-cert-badge" data-tooltip="Laurea triennale in Scienza e Ingegneria dei Materiali, L-9">🎓</span>
+          </div>
         </div>
 
       </div>
@@ -1400,6 +1408,22 @@
     document.querySelectorAll('.reveal').forEach((el, i) => {
       el.style.transitionDelay = (i % 5) * 0.06 + 's';
       revealObserver.observe(el);
+    });
+
+
+    // ─── Badge tap-to-show tooltip (mobile) ──────────────────────────────
+    // On touch devices hover doesn't fire, so tapping a badge toggles its
+    // tooltip. Tapping anywhere else dismisses all open tooltips.
+    document.querySelectorAll('.life-cert-badge').forEach(badge => {
+      badge.addEventListener('click', e => {
+        const isActive = badge.classList.contains('active');
+        document.querySelectorAll('.life-cert-badge.active').forEach(b => b.classList.remove('active'));
+        if (!isActive) badge.classList.add('active');
+        e.stopPropagation();
+      });
+    });
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.life-cert-badge.active').forEach(b => b.classList.remove('active'));
     });
   </script>
 
