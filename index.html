@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>Fabio Antonucci</title>
 
   <!-- Google Fonts: Anton (display/headings) + IBM Plex Sans (body) + IBM Plex Mono (labels/code) -->
@@ -103,7 +103,7 @@
       display: flex;
       align-items: center;
       gap: 1rem;
-      padding: 0.65rem 1.5rem;
+      padding: calc(0.65rem + env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) 0.65rem max(1.5rem, env(safe-area-inset-left));
       /* iOS-style frosted glass */
       backdrop-filter: blur(28px) saturate(180%) brightness(0.75);
       -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(0.75);
@@ -861,7 +861,7 @@
     ───────────────────────────────────────── */
     @media (max-width: 768px) {
       /* Navbar: hide section links, keep toggle */
-      #navbar      { padding: 0.6rem 1rem; }
+      #navbar      { padding: calc(0.6rem + env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 0.6rem max(1rem, env(safe-area-inset-left)); }
       .nav-links a { display: none; }
 
       /* Hero: single column, no top padding needed */
