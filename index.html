@@ -3,7 +3,27 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>Fabio Antonucci</title>
+  <title>Fabio Antonucci — Materials Engineer · Music Producer · iOS Developer</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Fabio Antonucci — Materials Engineering master's student at Federico II, electronic music producer (Hart), Apple Developer Academy alumnus and Swift Student Challenge 2026 winner. Napoli, Italy."/>
+  <meta name="author" content="Fabio Antonucci"/>
+  <link rel="canonical" href="https://fabioantonucci.com/"/>
+
+  <!-- Theme colour follows light/dark -->
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)"/>
+  <meta name="theme-color" content="#f8f6f1" media="(prefers-color-scheme: light)"/>
+
+  <!-- Favicon / touch icon -->
+  <link rel="icon" href="Resources/hartTee_dark.png"/>
+  <link rel="apple-touch-icon" href="Resources/hartTee_dark.png"/>
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Fabio Antonucci — Engineer · Producer · iOS Developer"/>
+  <meta property="og:description" content="Materials Engineering, electronic music (Hart), and iOS craft. Swift Student Challenge 2026 winner. Napoli, Italy."/>
+  <meta property="og:image" content="Resources/artworkDark.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
 
   <!-- Google Fonts: Anton (display/headings) + IBM Plex Sans (body) + IBM Plex Mono (labels/code) -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -350,7 +370,9 @@
       scrollbar-width: thin;
       scrollbar-color: var(--rule) transparent;
       padding-bottom: 1rem;
-      scroll-snap-type: x proximity;
+      /* No scroll-snap-type: proximity snapping re-aligned the first card's
+         start edge to the container start once cards/iframes reflowed,
+         scrolling the leading padding out of view on load. */
     }
     /* Custom scrollbar for webkit browsers */
     .hscroll-wrap::-webkit-scrollbar       { height: 2px; }
@@ -495,30 +517,64 @@
     .music-card:last-child { border-right: 1px solid var(--rule); }
     .music-card:hover      { background: var(--hover-surface); }
 
-    /* Category label at top (e.g. "Production") */
-    .music-card-label {
-      font-family:    var(--ff-mono);
-      font-size:      0.72rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color:          var(--snd);
-      margin-bottom:  auto; /* pushes card body to the bottom */
-    }
     .music-card-body {
-      margin-top:  auto;
-      padding-top: 2.5rem;
+      margin-top:  0;
+      padding-top: 0;
     }
     .music-card-title {
       font-family:    var(--ff-display);
-      font-size:      1.4rem;
+      font-size:      1.6rem;
       text-transform: uppercase;
-      line-height:    1.05;
-      margin-bottom:  0.65rem;
+      line-height:    1;
+      margin-bottom:  0.75rem;
     }
     .music-card-text {
       font-size:   0.85rem;
       line-height: 1.7;
       color:       var(--muted);
+    }
+
+    /* ─────────────────────────────────────────
+       RELEASES  (Spotify embeds carousel)
+       Each card is a Spotify embed iframe so
+       the official artwork + player show.
+    ───────────────────────────────────────── */
+    .releases-head {
+      font-family:    var(--ff-display);
+      font-size:      1.4rem;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      line-height:    1;
+      color:          var(--text);
+      padding:        0 2.5rem;
+      margin:         2.5rem 0 0.4rem;
+    }
+    .releases-sub {
+      font-family:    var(--ff-mono);
+      font-size:      0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color:          var(--snd);
+      padding:        0 2.5rem;
+      margin:         0 0 1.25rem;
+    }
+    .release-card {
+      width:        clamp(260px, 26vw, 300px);
+      flex-shrink:  0;
+      margin-right: 1.5rem;
+      /* No scroll-snap-align: when the Spotify iframes finish loading and
+         reflow, proximity-snap would re-snap the first card's start edge to
+         the container start, scrolling the leading padding out of view and
+         leaving the first card flush against the page edge. */
+      scroll-snap-align: none;
+    }
+    .release-card:last-child { margin-right: 0; }
+    .release-card iframe {
+      display:       block;
+      width:         100%;
+      height:        352px !important; /* lock box — Spotify JS auto-resizes track embeds otherwise */
+      border:        0;
+      border-radius: 12px;
     }
 
     /* ─────────────────────────────────────────
@@ -807,18 +863,15 @@
       font-size:      0.78rem;
       letter-spacing: 0.04em;
     }
-    /* Arrow icon that moves diagonally on hover */
-    .contact-link-arrow {
-      display:     inline-block;
-      margin-left: 0.4rem;
-      font-size:   0.7rem;
-      color:       var(--muted);
-      transition:  transform 0.15s, color 0.15s;
+    /* Icon at top of each contact card */
+    .contact-link-icon {
+      display:       block;
+      color:         var(--muted);
+      margin-bottom: 1rem;
+      transition:    color 0.15s;
     }
-    .contact-link-block:hover .contact-link-arrow {
-      transform: translate(3px, -3px);
-      color:     var(--text);
-    }
+    .contact-link-icon svg { width: 22px; height: 22px; display: block; }
+    .contact-link-block:hover .contact-link-icon { color: var(--text); }
 
     /* ─────────────────────────────────────────
        FOOTER
@@ -857,6 +910,21 @@
     }
 
     /* ─────────────────────────────────────────
+       REDUCED MOTION
+       Honour users who ask for less animation:
+       show everything immediately, drop smooth
+       scroll and transitions.
+    ───────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1 !important; transform: none !important; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ─────────────────────────────────────────
        RESPONSIVE — MOBILE  (≤768px)
     ───────────────────────────────────────── */
     @media (max-width: 768px) {
@@ -878,6 +946,7 @@
       /* Horizontal scroll tracks: align with tighter page padding */
       .hscroll-wrap { padding-bottom: 1rem; }
       .hscroll-track { padding: 0 1.25rem; }
+      .releases-head, .releases-sub { padding: 0 1.25rem; }
 
       /* Featured project: stack columns vertically */
       .featured-layout { grid-template-columns: 1fr; gap: 2.5rem; }
@@ -892,6 +961,9 @@
     }
 
   </style>
+
+  <!-- Fallback: if JS is disabled, reveal-animated content must still show -->
+  <noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
 </head>
 <body>
 
@@ -905,8 +977,8 @@
 
     <!-- Left: logo + brand name (visible before scroll) -->
     <div class="nav-brand">
-      <img class="nav-logo nav-logo--dark"  src="Resources/hartTee_dark.png"  alt="HART logo">
-      <img class="nav-logo nav-logo--light" src="Resources/hartTee_light.png" alt="HART logo">
+      <img class="nav-logo nav-logo--dark"  src="Resources/hartTee_dark.png"  alt="HART logo" width="28" height="28" decoding="async">
+      <img class="nav-logo nav-logo--light" src="Resources/hartTee_light.png" alt="HART logo" width="28" height="28" decoding="async" loading="lazy">
       <span class="nav-wordmark">HART</span>
     </div>
 
@@ -934,8 +1006,8 @@
        trigger navbar brand swap.
   ═══════════════════════════════════════ -->
   <section id="cover-gallery" aria-label="Cover artwork">
-    <img src="Resources/artworkLight.png" class="cover-image cover-light" alt="Artwork — light version">
-    <img src="Resources/artworkDark.png"  class="cover-image cover-dark"  alt="Artwork — dark version">
+    <img src="Resources/artworkLight.png" class="cover-image cover-light" alt="Artwork — light version" decoding="async" loading="lazy">
+    <img src="Resources/artworkDark.png"  class="cover-image cover-dark"  alt="Artwork — dark version" decoding="async" fetchpriority="high">
   </section>
 
 
@@ -960,10 +1032,7 @@
         <p class="hero-desc">
           Master's student in <strong>Materials Engineering</strong> at Federico II.
           <strong>Electronic music producer.</strong>
-          <strong>Apple Developer Academy</strong> alumnus and Swift Student Challenge winner.
-        </p>
-        <p class="hero-desc" style="margin-top:0.75rem;">
-  
+          <strong>Apple Developer Academy</strong> alumnus and Swift Student Challenge 2026 winner.
         </p>
         <div class="hero-location">Napoli, Italy · Open to Work</div>
       </div>
@@ -1037,7 +1106,7 @@
             <span class="life-tag">Cultural Exchange</span>
           </div>
           <div class="life-cert-badges">
-            <span class="life-cert-badge" data-tooltip="C2 Cambridge Certification (2019)">🎖️</span>
+            <span class="life-cert-badge" data-tooltip="C1 English Cambridge Certification (2019)">🎖️</span>
           </div>
         </div>
 
@@ -1045,14 +1114,14 @@
         <div class="life-card reveal" role="listitem">
           <div class="life-card-stripe mat"></div>
           <h3 class="life-card-title">Materials<br>Engineering</h3>
-          <p class="life-card-text">BSc in Materials Science &amp; Engineering from Federico II, graduating 101/110. Thesis on polyurethane foam acoustics. Now in the MSc, with a personal focus on the intersection of materials and sound.</p>
+          <p class="life-card-text">BSc in Materials Science &amp; Engineering from Federico II. Thesis on polyurethane foam acoustics. Now in the MSc, with a personal focus on the intersection of materials and sound.</p>
           <div class="life-card-tags">
             <span class="life-tag">Analytical Thinking</span>
             <span class="life-tag">Problem Solving</span>
             <span class="life-tag">Lab Work</span>
           </div>
           <div class="life-cert-badges">
-            <span class="life-cert-badge" data-tooltip="Laurea triennale in Scienza e Ingegneria dei Materiali, L-9">🎓</span>
+            <span class="life-cert-badge" data-tooltip="Laurea triennale in Scienza e Ingegneria dei Materiali, L-9 — 101/110">🎓</span>
           </div>
         </div>
 
@@ -1079,34 +1148,62 @@
 
         <!-- Card 1: Electronic Music Production -->
         <div class="music-card reveal" role="listitem">
-          <div class="music-card-label">Production</div>
           <div class="music-card-body">
-            <h3 class="music-card-title">Electronic<br>Music</h3>
-            <p class="music-card-text">Self-taught producer since age 14. The DAW as an instrument: Ableton, Logic, FL Studio. Sound design, mixing, composition. A decade of developing an ear alongside the technical craft.</p>
+            <div class="life-card-stripe snd"></div>
+            <h3 class="music-card-title">Music<br>Production</h3>
+            <p class="music-card-text">Self-taught producer since age 14. DAWs: Ableton, Logic Pro, FL Studio, ProTools. Sound design, mixing, composition. A decade of ear training.</p>
           </div>
         </div>
 
         <!-- Card 2: Audio-Visual Live Performance -->
         <div class="music-card reveal" role="listitem">
-          <div class="music-card-label">Live &amp; Visual</div>
           <div class="music-card-body">
-            <h3 class="music-card-title">Audio-Visual<br>Performance</h3>
+            <div class="life-card-stripe neutral"></div>
+            <h3 class="music-card-title">Audio-Visual</h3>
             <p class="music-card-text">Sound expanded into real-time visual systems via TouchDesigner. When audio becomes geometry. Performance as a live feedback loop between audio signal and generated imagery.</p>
           </div>
         </div>
 
         <!-- Card 3: Sound Technician Certification -->
         <div class="music-card reveal" role="listitem">
-          <div class="music-card-label">Training</div>
           <div class="music-card-body">
+            <div class="life-card-stripe snd"></div>
             <h3 class="music-card-title">Sound<br>Technician</h3>
-            <p class="music-card-text">Certified Sound Technician. Deepen audio matters at Regione Campania, Naples. Focused on sound design, routing in live audio and AV systems, live-mixing. It proved to be a valuable and hands-on learning experience.</p>
+            <p class="music-card-text">Deepen audio matters at Regione Campania, Naples. Focused on sound design, routing in live audio and AV systems, live-mixing.</p>
           </div>
           <div class="life-cert-badges">
             <span class="life-cert-badge" data-tooltip="EQF 4 Qualification">📜</span>
           </div>
         </div>
 
+      </div>
+    </div>
+
+    <!-- Releases — Spotify embeds carousel -->
+    <p class="releases-head reveal">Releases</p>
+    <p class="releases-sub reveal">Production &amp; Artworks</p>
+    <div class="hscroll-wrap">
+      <div class="hscroll-track releases-track" role="list">
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/6a1fwt1CKS29SBDwQy16wP?utm_source=generator" title="Dollar — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/0D4wYzpGaY7HM7ytaetimk?utm_source=generator" title="Nitemarez — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/1RoKDwToTQCpQzAMy1i5cs?utm_source=generator" title="Communicate — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/1kJEMtlqnHeY18igP45qjh?utm_source=generator" title="HART — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/3gUyQEIvWkvi42uvtr7YKC?utm_source=generator" title="Sunset Sherbet — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/1S1y4oX3mz7lhiZJFO6Lbb?utm_source=generator" title="Atto II — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/4W6kvnFFseeGNoE53wYz39?utm_source=generator" title="Hell's Doorbell — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/4oE9tuM4ywnvewaFuLW1YN?utm_source=generator" title="Plastic Flowers — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/585ZALNqabTS0KhxNgeAyW?utm_source=generator" title="Soldi &amp; Potere — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/2TCkRAkbMr6P2tdQ5WiOL4?utm_source=generator" title="Spine — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/5q1g07oJqtevSBCXYmkf1B?utm_source=generator" title="Communicate (Instrumental Version) — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+      </div>
+    </div>
+
+    <!-- Others — production-only releases (music, not artwork) -->
+    <p class="releases-head reveal">Others</p>
+    <p class="releases-sub reveal">Production</p>
+    <div class="hscroll-wrap">
+      <div class="hscroll-track releases-track" role="list">
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/7mKlj9sVtkBheGogKgxAKq?utm_source=generator" title="Tree Planting Tape Vol.2 — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
       </div>
     </div>
   </section>
@@ -1120,7 +1217,7 @@
   <section id="projects">
 
     <div class="section-intro reveal">
-      <p class="eyebrow">Apple Developer Academy</p>
+      <p class="eyebrow">Apple Developer Academy 2025/2026</p>
       <h2 class="section-h" style="margin-bottom:0;">@<br>Apple Developer Academy</h2>
     </div>
 
@@ -1159,7 +1256,7 @@
         <div class="app-card reveal" role="listitem">
           <div class="app-card-top-stripe"></div>
           <div class="app-icon">
-            <img src="Resources/Academy/3.png" alt="Storease icon" style="width:100%;height:100%;object-fit:cover;">
+            <img src="Resources/Academy/3.png" alt="Storease icon" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="app-name">Storease</div>
           <div class="app-bottom">
@@ -1189,7 +1286,7 @@
         <div class="app-card reveal" role="listitem">
           <div class="app-card-top-stripe"></div>
           <div class="app-icon">
-            <img src="Resources/Academy/5.png" alt="2089 icon" style="width:100%;height:100%;object-fit:cover;">
+            <img src="Resources/Academy/5.png" alt="2089 icon" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="app-name">2089</div>
           <div class="app-bottom">
@@ -1219,7 +1316,7 @@
         <div class="app-card reveal" role="listitem">
           <div class="app-card-top-stripe"></div>
           <div class="app-icon">
-            <img src="Resources/Academy/7.png" alt="Tinto icon" style="width:100%;height:100%;object-fit:cover;">
+            <img src="Resources/Academy/7.png" alt="Tinto icon" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="app-name">Tinto</div>
           <div class="app-bottom">
@@ -1251,7 +1348,7 @@
 
       <!-- Left: icon, title, metadata, TestFlight link -->
       <div class="featured-left reveal">
-        <img src="Resources/PocketChop/PocketChopICON.png" alt="PocketChop app icon" class="pc-icon">
+        <img src="Resources/PocketChop/PocketChopICON.png" alt="PocketChop app icon" class="pc-icon" loading="lazy" decoding="async">
         <h2 class="featured-title">Pocket<br><em>Chop</em></h2>
         <p class="featured-tagline">Sample slicer and step sequencer for iPad. Built entirely in Swift Playgrounds.</p>
         <div class="featured-meta">
@@ -1287,7 +1384,7 @@
         <div class="featured-section">
           <p class="featured-section-label">Why I built it</p>
           <p class="featured-section-text">I wanted a real production tool that ran entirely on iPad — no laptop, no subscription. PocketChop sits at the centre of the three things I do: <strong>sound, engineering precision, and iOS craftsmanship</strong>.</p>
-          <img src="Resources/comingSoon.png" alt="Coming Soon on the App Store" style="height:60px;margin-top:2.5rem;display:block;margin-left:auto;margin-right:auto;">
+          <img src="Resources/comingSoon.png" alt="Coming Soon on the App Store" loading="lazy" decoding="async" style="height:60px;margin-top:2.5rem;display:block;margin-left:auto;margin-right:auto;">
         </div>
 
       </div>
@@ -1302,26 +1399,30 @@
 
     <div class="contact-top reveal">
       <div class="contact-cta">
-        What's<br>next?
+        Let's<br>link up!
       </div>
     </div>
 
     <div class="contact-links-row reveal">
       <a href="mailto:fabioantonucci6@icloud.com" class="contact-link-block">
+        <span class="contact-link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg></span>
         <span class="contact-link-label">Email</span>
-        <span class="contact-link-val">fabioantonucci6@icloud.com <span class="contact-link-arrow">↗</span></span>
+        <span class="contact-link-val">fabioantonucci6@icloud.com</span>
       </a>
       <a href="https://www.linkedin.com/in/fabio-antonucci-8008522a6/" target="_blank" rel="noopener" class="contact-link-block">
+        <span class="contact-link-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></span>
         <span class="contact-link-label">LinkedIn</span>
-        <span class="contact-link-val">Fabio Antonucci <span class="contact-link-arrow">↗</span></span>
+        <span class="contact-link-val">Fabio Antonucci</span>
       </a>
-      <a href="https://instagram.com" target="_blank" rel="noopener" class="contact-link-block">
+      <a href="https://instagram.com/its.haartt" target="_blank" rel="noopener" class="contact-link-block">
+        <span class="contact-link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span>
         <span class="contact-link-label">Instagram</span>
-        <span class="contact-link-val">@its.haartt <span class="contact-link-arrow">↗</span></span>
+        <span class="contact-link-val">@its.haartt</span>
       </a>
-      <a href="https://github.com" target="_blank" rel="noopener" class="contact-link-block">
+      <a href="https://github.com/haartt" target="_blank" rel="noopener" class="contact-link-block">
+        <span class="contact-link-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.42c.58.1.79-.25.79-.56v-2.02c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.76.4-1.27.74-1.56-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.41-5.26 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></span>
         <span class="contact-link-label">GitHub</span>
-        <span class="contact-link-val">haartt <span class="contact-link-arrow">↗</span></span>
+        <span class="contact-link-val">haartt</span>
       </a>
     </div>
 
@@ -1425,6 +1526,8 @@
     document.addEventListener('click', () => {
       document.querySelectorAll('.life-cert-badge.active').forEach(b => b.classList.remove('active'));
     });
+
+
   </script>
 
 </body>
