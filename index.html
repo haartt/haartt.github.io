@@ -760,6 +760,13 @@
       letter-spacing: 0.1em;
     }
     .featured-meta-val { color: var(--text); }
+    .featured-meta-val a {
+      color: var(--pc);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+    .featured-meta-val a:hover { border-bottom-color: var(--pc); }
 
     /* TestFlight CTA button */
     .pc-testflight-btn {
@@ -778,6 +785,23 @@
     .pc-testflight-btn:hover {
       background: var(--pc);
       color:      var(--bg);
+    }
+    .pc-cta-row {
+      display:   flex;
+      flex-wrap: wrap;
+      gap:       0.75rem;
+      margin-top: 2.5rem;
+    }
+    .pc-cta-row .pc-testflight-btn { margin-top: 0; }
+    .pc-testflight-btn--soon {
+      color:          var(--text-dim, var(--text));
+      border-color:   var(--text-dim, var(--text));
+      opacity:        0.6;
+      cursor:         default;
+    }
+    .pc-testflight-btn--soon:hover {
+      background:      transparent;
+      color:          var(--text-dim, var(--text));
     }
 
     /* Right column writeup blocks */
@@ -1366,11 +1390,9 @@
           </div>
           <div class="featured-meta-item">
             <span class="featured-meta-key">Stack</span>
-            <span class="featured-meta-val">SwiftUI · AVFoundation · UIKit</span>
+            <span class="featured-meta-val">SwiftUI · AVFoundation · UIKit · <a href="https://github.com/audiokit/audiokit" target="_blank" rel="noopener">AudioKit ↗</a></span>
           </div>
         </div>
-        <!-- Replace # with your TestFlight invite link -->
-        <a href="#" class="pc-testflight-btn">Try on TestFlight ↗</a>
       </div>
 
       <!-- Right: what it is + personal context -->
@@ -1384,7 +1406,10 @@
         <div class="featured-section">
           <p class="featured-section-label">Why I built it</p>
           <p class="featured-section-text">I wanted a real production tool that ran entirely on iPad — no laptop, no subscription. PocketChop sits at the centre of the three things I do: <strong>sound, engineering precision, and iOS craftsmanship</strong>.</p>
-          <img src="Resources/comingSoon.png" alt="Coming Soon on the App Store" loading="lazy" decoding="async" style="height:60px;margin-top:2.5rem;display:block;margin-left:auto;margin-right:auto;">
+          <div class="pc-cta-row">
+            <a href="https://testflight.apple.com/join/cAkjF7J" target="_blank" rel="noopener" class="pc-testflight-btn">Try on TestFlight ↗</a>
+            <span class="pc-testflight-btn pc-testflight-btn--soon">App Store — Coming Soon</span>
+          </div>
         </div>
 
       </div>
