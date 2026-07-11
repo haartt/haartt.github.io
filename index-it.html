@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>haartt.github.io</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Fabio Antonucci — studente magistrale in Ingegneria dei Materiali alla Federico II, produttore di musica elettronica (Hart), ex studente dell'Apple Developer Academy e vincitore della Swift Student Challenge 2026. Napoli, Italia."/>
+  <meta name="author" content="Fabio Antonucci"/>
+  <link rel="canonical" href="https://fabioantonucci.com/"/>
+
+  <!-- Theme colour follows light/dark -->
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)"/>
+  <meta name="theme-color" content="#f8f6f1" media="(prefers-color-scheme: light)"/>
+
+  <!-- Favicon / touch icon -->
+  <link rel="icon" href="Resources/hartTee_dark.png"/>
+  <link rel="apple-touch-icon" href="Resources/hartTee_dark.png"/>
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Fabio Antonucci — Ingegnere · Produttore · Sviluppatore iOS"/>
+  <meta property="og:description" content="Ingegneria dei Materiali, musica elettronica (Hart) e sviluppo iOS. Vincitore della Swift Student Challenge 2026. Napoli, Italia."/>
+  <meta property="og:image" content="Resources/artworkDark.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+
+  <!-- Google Fonts: Anton (display/headings) + IBM Plex Sans (body) + IBM Plex Mono (labels/code) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+  <!-- Disable browser scroll restoration as early as possible so page always opens at top -->
+  <script>history.scrollRestoration = 'manual'; window.scrollTo(0, 0);</script>
+
+  <style>
+
+    /* ─────────────────────────────────────────
+       RESET
+       Zero out browser defaults so everything
+       starts from a clean slate.
+    ───────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ─────────────────────────────────────────
+       DESIGN TOKENS — DARK MODE (default)
+       All colours and fonts live here as CSS
+       variables. Change a value once, it updates
+       everywhere it's used.
+         --bg          page background
+         --text        primary text
+         --muted       secondary/dimmed text
+         --accent      highlight blue
+         --mat         materials domain colour (teal)
+         --snd         sound domain colour (sand)
+         --cod         code domain colour (lavender)
+         --rule        subtle divider lines
+         --hover-surface  card hover tint
+         --ff-*        font family shortcuts
+    ───────────────────────────────────────── */
+    :root, [data-theme="dark"] {
+      --bg:            #000;
+      --text:          #fff;
+      --muted:         #888;
+      --accent:        #6ecff6;
+      --mat:           #6FA89A;
+      --snd:           #C99F6E;
+      --cod:           #9C9CCB;
+      --rule:          rgba(255,255,255,0.12);
+      --hover-surface: rgba(255,255,255,0.04);
+      --ff-display: 'Anton', sans-serif;
+      --ff-body:    'IBM Plex Sans', sans-serif;
+      --ff-mono:    'IBM Plex Mono', monospace;
+    }
+
+    /* ─────────────────────────────────────────
+       DESIGN TOKENS — LIGHT MODE OVERRIDES
+       Only the values that change between modes
+       are listed here. Everything else inherits
+       from :root above.
+    ───────────────────────────────────────── */
+    [data-theme="light"] {
+      --bg:            #f8f6f1;
+      --text:          #0a0a0a;
+      --muted:         #666;
+      --accent:        #0284c7;
+      --mat:           #2e6e62;  /* darker teal for contrast on light bg */
+      --snd:           #8c6530;  /* darker sand */
+      --cod:           #4a4a9a;  /* darker lavender */
+      --rule:          rgba(0,0,0,0.12);
+      --hover-surface: rgba(0,0,0,0.03);
+    }
+
+    /* ─────────────────────────────────────────
+       BASE
+    ───────────────────────────────────────── */
+    html { scroll-behavior: smooth; }
+    body {
+      background:  var(--bg);
+      color:       var(--text);
+      font-family: var(--ff-body);
+      overflow-x:  clip; /* prevent horizontal scrollbar from horizontal card tracks */
+    }
+
+    /* ─────────────────────────────────────────
+       NAVBAR
+       Fixed at top of screen. Glass blur effect.
+       Two states:
+         default   → shows logo + "HART"
+         .hero-pinned → logo fades out, "Fabio
+                        Antonucci" fades in
+       The switch is triggered by JS when the
+       cover image scrolls out of view.
+    ───────────────────────────────────────── */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100; /* sits above everything */
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: calc(0.65rem + env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) 0.65rem max(1.5rem, env(safe-area-inset-left));
+      /* iOS-style frosted glass */
+      backdrop-filter: blur(28px) saturate(180%) brightness(0.75);
+      -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(0.75);
+      background: rgba(0,0,0,0.28);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    [data-theme="light"] #navbar {
+      backdrop-filter: blur(28px) saturate(180%) brightness(1.08);
+      -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(1.08);
+      background: rgba(248,246,241,0.52);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+
+    /* Left side: logo image + "HART" wordmark */
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .nav-logo {
+      height: 28px;
+      width: 28px;
+      display: block;
+      object-fit: contain;
+    }
+    /* Show dark logo in dark mode, light logo in light mode */
+    .nav-logo--dark  { display: block; }
+    .nav-logo--light { display: none;  }
+    [data-theme="light"] .nav-logo--dark  { display: none;  }
+    [data-theme="light"] .nav-logo--light { display: block; }
+
+    .nav-wordmark {
+      font-family:     var(--ff-display);
+      font-size:       1rem;
+      letter-spacing:  0.1em;
+      text-transform:  uppercase;
+      color:           var(--text);
+    }
+
+    /* "Fabio Antonucci" title — hidden by default, slides in when pinned */
+    .nav-title {
+      font-family:    var(--ff-display);
+      font-size:      1rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color:          var(--text);
+      opacity:        0;
+      transform:      translateY(7px);
+      transition:     opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+      white-space:    nowrap;
+    }
+
+    /* Right side: section links + theme toggle */
+    .nav-links {
+      display:     flex;
+      gap:         1.5rem;
+      align-items: center;
+      margin-left: auto; /* pushes nav-links to the right */
+    }
+    .nav-links a {
+      font-family:    var(--ff-mono);
+      font-size:      0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color:          var(--text);
+      text-decoration: none;
+      transition:     color 0.15s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* Light/Dark toggle button */
+    .theme-toggle {
+      font-family:    var(--ff-mono);
+      font-size:      0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color:          var(--text);
+      background:     transparent;
+      border:         1px solid var(--rule);
+      padding:        0.3rem 0.6rem;
+      cursor:         pointer;
+    }
+
+    /* Language switcher (EN · IT · ES) */
+    .nav-lang { display: flex; gap: 0.5rem; align-items: center; }
+    .nav-lang a {
+      font-family:    var(--ff-mono);
+      font-size:      0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color:          var(--text);
+      text-decoration: none;
+      transition:     color 0.15s;
+    }
+    .nav-lang a:hover  { color: var(--accent); }
+    .nav-lang a.active { color: var(--text); border-bottom: 1px solid var(--accent); }
+
+    /* PINNED STATE: cover image has scrolled past the top */
+    #navbar.hero-pinned .nav-brand {
+      opacity:        0;
+      transform:      translateX(-10px);
+      pointer-events: none;
+    }
+    #navbar.hero-pinned .nav-title {
+      opacity:        1;
+      transform:      translateY(0);
+      pointer-events: auto;
+    }
+
+    /* ─────────────────────────────────────────
+       COVER IMAGE
+       Full-width artwork image at the very top.
+       Two versions: dark and light mode.
+       JS (via IntersectionObserver) watches this
+       element to trigger the navbar swap.
+    ───────────────────────────────────────── */
+    #cover-gallery { width: 100%; }
+    .cover-image {
+      display: block;
+      width:   100%;
+      height:  auto; /* preserves image proportions, no cropping */
+    }
+    /* Show only the right image for the current theme */
+    .cover-light { display: none;  }
+    .cover-dark  { display: block; }
+    [data-theme="light"] .cover-light { display: block; }
+    [data-theme="light"] .cover-dark  { display: none;  }
+
+    /* ─────────────────────────────────────────
+       HERO
+       Name + domain pills on the left.
+       Bio text on the right.
+       Fixed gap between cover artwork and the
+       rule line above the name (padding-top).
+    ───────────────────────────────────────── */
+    #hero {
+      display:    flex;
+      flex-direction: column;
+      padding:    4rem 2.5rem 4rem;
+      border-bottom: 1px solid var(--rule);
+      position:   relative;
+      overflow:   hidden;
+    }
+    .hero-content {
+      position: relative;
+      z-index:  2;
+      display:  grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      border-top:  1px solid var(--rule);
+      padding-top: 2rem;
+    }
+    /* Big name: "FABIO / ANTONUCCI" */
+    .hero-title {
+      font-family:    var(--ff-display);
+      font-size:      clamp(3rem, 8vw, 6.5rem); /* scales with viewport */
+      line-height:    0.88;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+    }
+    /* Coloured domain pills below the name */
+    .hero-domains {
+      display:    flex;
+      gap:        0.4rem;
+      margin-top: 1.25rem;
+      flex-wrap:  wrap;
+    }
+    .domain-pill {
+      font-family:    var(--ff-mono);
+      font-size:      0.72rem;
+      font-weight:    500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding:        0.3rem 0.6rem;
+      border:         1px solid; /* colour set per modifier below */
+    }
+    .domain-pill.mat { color: var(--mat); border-color: var(--mat); }
+    .domain-pill.snd { color: var(--snd); border-color: var(--snd); }
+    .domain-pill.cod { color: var(--cod); border-color: var(--cod); }
+
+    /* Right column: bio paragraphs */
+    .hero-right { padding-left: 3rem; }
+    .hero-desc {
+      font-size:   clamp(0.9rem, 1.3vw, 1.05rem);
+      line-height: 1.75;
+      color:       var(--muted);
+      max-width:   36rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero-desc strong { color: var(--text); font-weight: 500; }
+
+    /* "● Napoli, Italy · Open to Work" */
+    .hero-location {
+      font-family:    var(--ff-mono);
+      font-size:      0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color:          var(--muted);
+      display:        flex;
+      align-items:    center;
+      gap:            0.5rem;
+    }
+    .hero-location::before {
+      content:   "●";
+      color:     var(--mat);
+      font-size: 0.55rem;
+    }
+
+    /* ─────────────────────────────────────────
+       SECTION SHARED STYLES
+       Eyebrow = small label above section title.
+       section-h = large section heading.
+    ───────────────────────────────────────── */
+    section.content-section { padding: 5rem 2.5rem; }
+
+    .eyebrow {
+      font-family:    var(--ff-mono);
+      font-size:      0.75rem;
+      font-weight:    500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color:          var(--muted);
+      margin-bottom:  2.5rem;
+      display:        flex;
+      align-items:    center;
+      gap:            0.75rem;
+    }
+    .eyebrow::before {
+      content:    "";
+      display:    block;
+      width:      24px;
+      height:     1px;
+      background: var(--muted); /* decorative horizontal line before label */
+    }
+    .section-h {
+      font-family:    var(--ff-display);
+      font-size:      clamp(2rem, 5vw, 3.5rem);
+      font-weight:    400;
+      letter-spacing: 0.01em;
+      line-height:    0.95;
+      text-transform: uppercase;
+      margin-bottom:  3rem;
+    }
+
+    /* ─────────────────────────────────────────
+       HORIZONTAL SCROLL TRACK
+       Used by Life, Music, and Apps sections.
+       Cards sit inside .hscroll-track and
+       scroll left/right on overflow.
+    ───────────────────────────────────────── */
+    .hscroll-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch; /* smooth momentum scroll on iOS */
+      scrollbar-width: thin;
+      scrollbar-color: var(--rule) transparent;
+      padding-bottom: 1rem;
+      /* No scroll-snap-type: proximity snapping re-aligned the first card's
+         start edge to the container start once cards/iframes reflowed,
+         scrolling the leading padding out of view on load. */
+    }
+    /* Custom scrollbar for webkit browsers */
+    .hscroll-wrap::-webkit-scrollbar       { height: 2px; }
+    .hscroll-wrap::-webkit-scrollbar-track { background: transparent; }
+    .hscroll-wrap::-webkit-scrollbar-thumb { background: var(--rule); }
+
+    .hscroll-track {
+      display: flex;
+      gap:     0;
+      width:   max-content; /* lets cards overflow without wrapping */
+      padding: 0 2.5rem;   /* alignment padding here, not on the overflow wrapper */
+    }
+
+    /* ─────────────────────────────────────────
+       LIFE CARDS  (Background section)
+       Horizontal scroll row of story cards
+       about who Fabio is / where he came from.
+    ───────────────────────────────────────── */
+    #life { border-top: 1px solid var(--rule); }
+    #life .section-intro { padding: 3rem 2.5rem 2rem; }
+
+    .life-card {
+      position:    relative; /* needed for cert badge positioning */
+      width:       clamp(280px, 30vw, 360px);
+      border-left: 1px solid var(--rule);
+      padding:     2rem;
+      flex-shrink: 0;
+      display:     flex;
+      flex-direction: column;
+      min-height:  420px;
+      transition:  background 0.15s;
+      scroll-snap-align: start;
+    }
+
+    /* Badge row — absolute container, bottom-right of card */
+    .life-cert-badges {
+      position:    absolute;
+      bottom:      1rem;
+      right:       1rem;
+      display:     flex;
+      gap:         0.5rem;
+      align-items: center;
+    }
+    .life-cert-badge {
+      position:       relative; /* tooltip anchor */
+      font-size:      1rem;
+      cursor:         pointer;
+      line-height:    1;
+      padding:        0.5rem;
+      margin:         -0.5rem;
+      touch-action:   manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .life-cert-badge::after {
+      content:        attr(data-tooltip);
+      position:       absolute;
+      bottom:         calc(100% + 6px);
+      right:          0;
+      white-space:    nowrap;
+      font-family:    var(--ff-mono);
+      font-size:      0.62rem;
+      letter-spacing: 0.06em;
+      color:          var(--text);
+      background:     var(--bg);
+      border:         1px solid var(--rule);
+      padding:        0.25rem 0.55rem;
+      opacity:        0;
+      pointer-events: none;
+      transition:     opacity 0.2s;
+    }
+    .life-cert-badge:hover::after  { opacity: 1; }
+    .life-cert-badge.active::after { opacity: 1; }
+    .life-card:last-child { border-right: 1px solid var(--rule); }
+    .life-card:hover      { background: var(--hover-surface); }
+
+    /* Emoji icon at top of card */
+    .life-card-icon {
+      font-size:     2rem;
+      line-height:   1;
+      margin-bottom: 1.25rem;
+    }
+    /* Thin coloured accent line below icon */
+    .life-card-stripe {
+      width:         32px;
+      height:        2px;
+      margin-bottom: 1rem;
+    }
+    .life-card-stripe.mat     { background: var(--mat); }
+    .life-card-stripe.snd     { background: var(--snd); }
+    .life-card-stripe.cod     { background: var(--cod); }
+    .life-card-stripe.neutral { background: var(--muted); }
+
+    .life-card-title {
+      font-family:    var(--ff-display);
+      font-size:      1.6rem;
+      text-transform: uppercase;
+      line-height:    1;
+      margin-bottom:  0.75rem;
+    }
+    .life-card-text {
+      font-size:   0.85rem;
+      line-height: 1.7;
+      color:       var(--muted);
+    }
+    /* Keyword tags at card bottom */
+    .life-card-tags {
+      display:    flex;
+      flex-wrap:  wrap;
+      gap:        0.35rem;
+      margin-top: 1.25rem;
+    }
+    .life-tag {
+      font-family:    var(--ff-mono);
+      font-size:      0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding:        0.25rem 0.55rem;
+      border:         1px solid var(--rule);
+      color:          var(--muted);
+    }
+
+    /* ─────────────────────────────────────────
+       MUSIC CARDS  (Music & Sound section)
+       Same horizontal-scroll pattern as Life
+       cards but narrower and simpler layout.
+    ───────────────────────────────────────── */
+    #music { border-top: 1px solid var(--rule); }
+    #music .section-intro { padding: 3rem 2.5rem 2rem; }
+
+    .music-card {
+      width:       clamp(260px, 28vw, 340px);
+      border-left: 1px solid var(--rule);
+      padding:     2rem;
+      flex-shrink: 0;
+      min-height:  320px;
+      display:     flex;
+      flex-direction: column;
+      transition:  background 0.15s;
+      scroll-snap-align: start;
+      position:    relative;
+    }
+    .music-card:last-child { border-right: 1px solid var(--rule); }
+    .music-card:hover      { background: var(--hover-surface); }
+
+    .music-card-body {
+      margin-top:  0;
+      padding-top: 0;
+    }
+    .music-card-title {
+      font-family:    var(--ff-display);
+      font-size:      1.6rem;
+      text-transform: uppercase;
+      line-height:    1;
+      margin-bottom:  0.75rem;
+    }
+    .music-card-text {
+      font-size:   0.85rem;
+      line-height: 1.7;
+      color:       var(--muted);
+    }
+
+    /* ─────────────────────────────────────────
+       RELEASES  (Spotify embeds carousel)
+       Each card is a Spotify embed iframe so
+       the official artwork + player show.
+    ───────────────────────────────────────── */
+    .releases-head {
+      font-family:    var(--ff-display);
+      font-size:      1.4rem;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      line-height:    1;
+      color:          var(--text);
+      padding:        0 2.5rem;
+      margin:         2.5rem 0 0.4rem;
+    }
+    .releases-sub {
+      font-family:    var(--ff-mono);
+      font-size:      0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color:          var(--snd);
+      padding:        0 2.5rem;
+      margin:         0 0 1.25rem;
+    }
+    .release-card {
+      width:        clamp(260px, 26vw, 300px);
+      flex-shrink:  0;
+      margin-right: 1.5rem;
+      /* No scroll-snap-align: when the Spotify iframes finish loading and
+         reflow, proximity-snap would re-snap the first card's start edge to
+         the container start, scrolling the leading padding out of view and
+         leaving the first card flush against the page edge. */
+      scroll-snap-align: none;
+    }
+    .release-card:last-child { margin-right: 0; }
+    .release-card iframe {
+      display:       block;
+      width:         100%;
+      height:        352px !important; /* lock box — Spotify JS auto-resizes track embeds otherwise */
+      border:        0;
+      border-radius: 12px;
+    }
+
+    /* ─────────────────────────────────────────
+       APP CARDS  (Academy Projects section)
+       Narrower cards, one per iOS app built
+       at Apple Developer Academy.
+    ───────────────────────────────────────── */
+    #projects { border-top: 1px solid var(--rule); }
+    #projects .section-intro { padding: 3rem 2.5rem 2rem; }
+
+    .app-card {
+      width:       clamp(220px, 24vw, 280px);
+      border-left: 1px solid var(--rule);
+      padding:     2rem 1.75rem;
+      flex-shrink: 0;
+      min-height:  280px;
+      display:     flex;
+      flex-direction: column;
+      position:    relative;
+      transition:  background 0.15s;
+      scroll-snap-align: start;
+    }
+    .app-card:last-child { border-right: 1px solid var(--rule); }
+    .app-card:hover      { background: var(--hover-surface); }
+
+    /* Thin lavender line that appears at top of card on hover */
+    .app-card-top-stripe {
+      position:   absolute;
+      top: 0; left: 0; right: 0;
+      height:     1px;
+      background: var(--cod);
+      opacity:    0;
+      transition: opacity 0.2s;
+    }
+    .app-card:hover .app-card-top-stripe { opacity: 1; }
+
+    /* App icon box */
+    .app-icon {
+      width:         72px;
+      height:        72px;
+      border-radius: 16px;
+      margin-bottom: 1.5rem;
+      display:       block;
+      flex-shrink:   0;
+      overflow:      hidden;
+    }
+    /* Gradient placeholder for apps without a real icon */
+    .app-icon--placeholder {
+      background: linear-gradient(145deg, #555 0%, #e8e8e8 100%);
+    }
+    [data-theme="light"] .app-icon--placeholder {
+      background: linear-gradient(145deg, #aaa 0%, #111 100%);
+    }
+    .app-name {
+      font-family:    var(--ff-display);
+      font-size:      1.2rem;
+      text-transform: uppercase;
+      line-height:    1;
+      margin-bottom:  0.6rem;
+    }
+    /* Year and context label (e.g. "2026 · Swift Student Challenge") */
+    .app-year {
+      font-family:    var(--ff-mono);
+      font-size:      0.72rem;
+      letter-spacing: 0.1em;
+      color:          var(--muted);
+      margin-bottom:  1rem;
+    }
+    .app-bottom { margin-top: auto; } /* pushes content group to bottom of card */
+    .app-desc {
+      font-size:     0.82rem;
+      line-height:   1.65;
+      color:         var(--muted);
+      margin-bottom: 0.85rem;
+    }
+
+    /* Link buttons at bottom of app cards */
+    .app-links {
+      display:   flex;
+      gap:       0.4rem;
+      flex-wrap: wrap;
+    }
+    .app-link {
+      font-family:     var(--ff-mono);
+      font-size:       0.65rem;
+      letter-spacing:  0.08em;
+      text-transform:  uppercase;
+      text-decoration: none;
+      border:          1px solid;
+      padding:         0.22rem 0.55rem;
+      transition:      background 0.15s, color 0.15s;
+    }
+    /* GitHub */
+    .app-link--gh    { color: var(--text); border-color: var(--rule); }
+    .app-link--gh:hover { background: var(--hover-surface); }
+    /* TestFlight — active */
+    .app-link--tf    { color: var(--cod); border-color: var(--cod); }
+    .app-link--tf:hover { background: var(--cod); color: var(--bg); }
+    /* App Store */
+    .app-link--store { color: var(--mat); border-color: var(--mat); }
+    .app-link--store:hover { background: var(--mat); color: var(--bg); }
+    /* Greyed out — no link available */
+    .app-link--disabled {
+      color:          var(--muted);
+      border-color:   var(--rule);
+      opacity:        0.35;
+      pointer-events: none;
+    }
+
+    /* ─────────────────────────────────────────
+       FEATURED PROJECT — PocketChop
+       Orange accent scoped to this section.
+       Two-column: icon + metadata left,
+       writeup right.
+    ───────────────────────────────────────── */
+    #featured {
+      --pc: #F07C2A; /* PocketChop orange — change here to update whole section */
+      border-top: 1px solid var(--rule);
+      padding:    5rem 2.5rem;
+    }
+    [data-theme="light"] #featured { --pc: #C55F10; }
+
+    /* App icon */
+    .pc-icon {
+      width:         72px;
+      height:        72px;
+      border-radius: 16px;
+      display:       block;
+      margin-bottom: 1.75rem;
+    }
+
+    /* Award badge */
+    .featured-badge {
+      display:        inline-block;
+      font-family:    var(--ff-mono);
+      font-size:      0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding:        0.3rem 0.75rem;
+      border:         1px solid var(--pc);
+      color:          var(--pc);
+      margin-bottom:  2rem;
+    }
+    .featured-layout {
+      display:     grid;
+      grid-template-columns: 1fr 1fr;
+      gap:         5rem;
+      align-items: start;
+    }
+    .featured-title {
+      font-family:    var(--ff-display);
+      font-size:      clamp(3rem, 7vw, 5.5rem);
+      line-height:    0.88;
+      text-transform: uppercase;
+      margin-bottom:  1.5rem;
+    }
+    .featured-title em { font-style: normal; color: var(--pc); }
+
+    /* Tagline with left orange border */
+    .featured-tagline {
+      font-size:     clamp(1rem, 1.5vw, 1.15rem);
+      line-height:   1.7;
+      color:         var(--muted);
+      margin-bottom: 2rem;
+      border-left:   2px solid var(--pc);
+      padding-left:  1.25rem;
+    }
+    /* Key–value metadata rows */
+    .featured-meta { display: flex; flex-direction: column; gap: 0.5rem; }
+    .featured-meta-item {
+      display:        flex;
+      gap:            1rem;
+      font-family:    var(--ff-mono);
+      font-size:      0.75rem;
+      letter-spacing: 0.04em;
+      border-top:     1px solid var(--rule);
+      padding-top:    0.5rem;
+    }
+    .featured-meta-key {
+      color:          var(--muted);
+      min-width:      80px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .featured-meta-val { color: var(--text); }
+    .featured-meta-val a {
+      color: var(--pc);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+    .featured-meta-val a:hover { border-bottom-color: var(--pc); }
+
+    /* TestFlight CTA button */
+    .pc-testflight-btn {
+      display:        inline-block;
+      margin-top:     2rem;
+      font-family:    var(--ff-mono);
+      font-size:      0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color:          var(--pc);
+      text-decoration: none;
+      border:         1px solid var(--pc);
+      padding:        0.5rem 1.1rem;
+      transition:     background 0.15s, color 0.15s;
+    }
+    .pc-testflight-btn:hover {
+      background: var(--pc);
+      color:      var(--bg);
+    }
+    .pc-cta-row {
+      display:   flex;
+      flex-wrap: wrap;
+      gap:       0.75rem;
+      margin-top: 2.5rem;
+    }
+    .pc-cta-row .pc-testflight-btn { margin-top: 0; }
+    .pc-testflight-btn--soon {
+      color:          var(--text-dim, var(--text));
+      border-color:   var(--text-dim, var(--text));
+      opacity:        0.6;
+      cursor:         default;
+    }
+    .pc-testflight-btn--soon:hover {
+      background:      transparent;
+      color:          var(--text-dim, var(--text));
+    }
+
+    /* Right column writeup blocks */
+    .featured-section { margin-bottom: 2.5rem; }
+    .featured-section-label {
+      font-family:    var(--ff-mono);
+      font-size:      0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color:          var(--pc);
+      margin-bottom:  0.75rem;
+    }
+    .featured-section-text {
+      font-size:   0.92rem;
+      line-height: 1.75;
+      color:       var(--muted);
+    }
+    .featured-section-text strong { color: var(--text); font-weight: 500; }
+
+    /* ─────────────────────────────────────────
+       CONTACT
+       Big CTA heading left, blurb right.
+       Below: a row of clickable contact blocks.
+    ───────────────────────────────────────── */
+    #contact {
+      border-top: 1px solid var(--rule);
+      padding:    5rem 2.5rem 6rem;
+    }
+    .contact-top {
+      display:         flex;
+      align-items:     flex-end;
+      justify-content: space-between;
+      gap:             2rem;
+      margin-bottom:   4rem;
+      flex-wrap:       wrap;
+    }
+    .contact-cta {
+      font-family:    var(--ff-display);
+      font-size:      clamp(2.5rem, 7vw, 5.5rem);
+      line-height:    0.88;
+      text-transform: uppercase;
+    }
+    .contact-cta em { font-style: normal; color: var(--muted); }
+
+    .contact-sub {
+      font-family:    var(--ff-mono);
+      font-size:      0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color:          var(--muted);
+      max-width:      26rem;
+      line-height:    1.75;
+    }
+    /* Row of contact method blocks */
+    .contact-links-row {
+      display:    flex;
+      gap:        0;
+      border-top: 1px solid var(--rule);
+    }
+    .contact-link-block {
+      flex:            1;
+      padding:         1.5rem 2rem;
+      border-right:    1px solid var(--rule);
+      text-decoration: none;
+      color:           var(--text);
+      display:         block;
+      transition:      background 0.15s;
+    }
+    .contact-link-block:last-child { border-right: none; }
+    .contact-link-block:hover      { background: var(--hover-surface); }
+
+    .contact-link-label {
+      font-family:    var(--ff-mono);
+      font-size:      0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color:          var(--muted);
+      margin-bottom:  0.5rem;
+      display:        block;
+    }
+    .contact-link-val {
+      font-family:    var(--ff-mono);
+      font-size:      0.78rem;
+      letter-spacing: 0.04em;
+    }
+    /* Icon at top of each contact card */
+    .contact-link-icon {
+      display:       block;
+      color:         var(--muted);
+      margin-bottom: 1rem;
+      transition:    color 0.15s;
+    }
+    .contact-link-icon svg { width: 22px; height: 22px; display: block; }
+    .contact-link-block:hover .contact-link-icon { color: var(--text); }
+
+    /* ─────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--rule);
+      padding:    1.5rem 2.5rem;
+      display:    flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap:  wrap;
+      gap:        1rem;
+    }
+    .footer-left,
+    .footer-time {
+      font-family:    var(--ff-mono);
+      font-size:      0.65rem;
+      color:          var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ─────────────────────────────────────────
+       SCROLL REVEAL
+       Elements start invisible and slide up.
+       JS adds .in when they enter the viewport.
+    ───────────────────────────────────────── */
+    .reveal {
+      opacity:    0;
+      transform:  translateY(16px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.in {
+      opacity:   1;
+      transform: none;
+    }
+
+    /* ─────────────────────────────────────────
+       REDUCED MOTION
+       Honour users who ask for less animation:
+       show everything immediately, drop smooth
+       scroll and transitions.
+    ───────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1 !important; transform: none !important; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE — MOBILE  (≤768px)
+    ───────────────────────────────────────── */
+    @media (max-width: 768px) {
+      /* Navbar: hide section links, keep language switch + toggle */
+      #navbar      { padding: calc(0.6rem + env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 0.6rem max(1rem, env(safe-area-inset-left)); }
+      .nav-links a { display: none; }
+      .nav-lang a  { display: inline; }
+
+      /* Hero: single column, no top padding needed */
+      #hero { padding: 2rem 1.25rem 3rem; }
+      .hero-content    { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-right      { padding-left: 0; }
+
+      /* Sections: tighter padding */
+      section.content-section, #featured, #contact { padding: 3rem 1.25rem; }
+      #life .section-intro,
+      #music .section-intro,
+      #projects .section-intro { padding: 2.5rem 1.25rem 1.5rem; }
+
+      /* Horizontal scroll tracks: align with tighter page padding */
+      .hscroll-wrap { padding-bottom: 1rem; }
+      .hscroll-track { padding: 0 1.25rem; }
+      .releases-head, .releases-sub { padding: 0 1.25rem; }
+
+      /* Featured project: stack columns vertically */
+      .featured-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+
+      /* Contact: stack layout vertically */
+      .contact-top       { flex-direction: column; align-items: flex-start; }
+      .contact-links-row { flex-direction: column; }
+      .contact-link-block {
+        border-right:  none;
+        border-bottom: 1px solid var(--rule);
+      }
+    }
+
+  </style>
+
+  <!-- Fallback: if JS is disabled, reveal-animated content must still show -->
+  <noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════
+       NAVBAR
+       Fixed glass bar. Logo + HART on load.
+       After scrolling past cover image, JS
+       swaps to "Fabio Antonucci" text.
+  ═══════════════════════════════════════ -->
+  <nav id="navbar" aria-label="Navigazione del sito">
+
+    <!-- Left: logo + brand name (visible before scroll) -->
+    <div class="nav-brand">
+      <img class="nav-logo nav-logo--dark"  src="Resources/hartTee_dark.png"  alt="HART logo" width="28" height="28" decoding="async">
+      <img class="nav-logo nav-logo--light" src="Resources/hartTee_light.png" alt="HART logo" width="28" height="28" decoding="async" loading="lazy">
+      <span class="nav-wordmark">HART</span>
+    </div>
+
+    <!-- Left: name (hidden until cover image exits viewport) -->
+    <span class="nav-title" aria-hidden="true">Fabio Antonucci</span>
+
+    <!-- Right: section links + theme toggle -->
+    <div class="nav-links">
+      <a href="#life">Chi sono</a>
+      <a href="#music">Musica</a>
+      <a href="#projects">App</a>
+      <a href="#featured">PocketChop</a>
+      <a href="#contact">Contatti</a>
+      <span class="nav-lang" aria-label="Lingua">
+        <a href="index.html">EN</a>
+        <a href="index-it.html" class="active">IT</a>
+        <a href="index-es.html">ES</a>
+      </span>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Cambia tema chiaro/scuro">Chiaro</button>
+    </div>
+
+  </nav>
+
+
+  <!-- ═══════════════════════════════════════
+       COVER IMAGE
+       Full-width artwork. Switches between
+       dark/light version based on theme.
+       IntersectionObserver watches this to
+       trigger navbar brand swap.
+  ═══════════════════════════════════════ -->
+  <section id="cover-gallery" aria-label="Artwork di copertina">
+    <img src="Resources/artworkLight.png" class="cover-image cover-light" alt="Artwork — light version" decoding="async" loading="lazy">
+    <img src="Resources/artworkDark.png"  class="cover-image cover-dark"  alt="Artwork — dark version" decoding="async" fetchpriority="high">
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       HERO
+       Name + domain pills left.
+       Bio paragraphs right.
+  ═══════════════════════════════════════ -->
+  <section id="hero" aria-label="Introduzione">
+    <div class="hero-content reveal">
+
+      <div class="hero-left">
+        <h1 class="hero-title">Fabio<br>Antonucci</h1>
+        <div class="hero-domains">
+          <span class="domain-pill mat">Materials Eng.</span>
+          <span class="domain-pill snd">Music &amp; Sound</span>
+          <span class="domain-pill cod">iOS / Code</span>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <p class="hero-desc">
+          Studente magistrale in <strong>Ingegneria dei Materiali</strong> alla Federico II.
+          <strong>Produttore di musica elettronica.</strong>
+          Ex studente dell'<strong>Apple Developer Academy</strong> e vincitore della Swift Student Challenge 2026.
+        </p>
+        <div class="hero-location">Napoli, Italia · Disponibile per lavoro</div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       BACKGROUND / LIFE & EDUCATION
+       Horizontal-scroll cards. Each card is
+       a chapter of Fabio's story, ordered
+       chronologically from earliest memory.
+  ═══════════════════════════════════════ -->
+  <section id="life">
+
+    <div class="section-intro reveal">
+      <p class="eyebrow">Il mio percorso</p>
+      <h2 class="section-h" style="margin-bottom:0;">Vita e<br>Formazione</h2>
+    </div>
+
+    <div class="hscroll-wrap">
+      <div class="hscroll-track" role="list">
+
+        <!-- Card 1: Design & Drawing -->
+        <div class="life-card reveal" role="listitem">
+          <div class="life-card-stripe neutral"></div>
+          <h3 class="life-card-title">Design e<br>Disegno</h3>
+          <p class="life-card-text">Ho iniziato a disegnare da bambino. Col tempo è diventata un'abitudine: schizzo di continuo, e alcuni schizzi diventano qualcosa... </p>
+          <div class="life-card-tags">
+            <span class="life-tag">Pensiero visivo</span>
+            <span class="life-tag">Sensibilità UI</span>
+            <span class="life-tag">Graphic Design</span>
+          </div>
+        </div>
+
+        <!-- Card 2: First Computer -->
+        <div class="life-card reveal" role="listitem">
+          <div class="life-card-stripe cod"></div>
+          <h3 class="life-card-title">Primo<br>Computer</h3>
+          <p class="life-card-text">Un regalo di mio padre. Un portatile eMachines. Ci ho smanettato tanto: ho dovuto romperlo più volte prima di capire come non romperlo. </p>
+          <div class="life-card-tags">
+            <span class="life-tag">Autodidatta</span>
+            <span class="life-tag">Curiosità</span>
+            <span class="life-tag">Esplorazione tech</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Liceo Scientifico -->
+        <div class="life-card reveal" role="listitem">
+          <div class="life-card-stripe mat"></div>
+          <h3 class="life-card-title">Liceo<br>Scientifico</h3>
+          <p class="life-card-text">Cinque anni di matematica, fisica, latino e angoscia esistenziale. Liceo Tito Lucrezio Caro, Napoli.</p>
+          <div class="life-card-tags">
+            <span class="life-tag">Matematica</span>
+            <span class="life-tag">Metodo scientifico</span>
+          </div>
+          <div class="life-cert-badges">
+            <span class="life-cert-badge" data-tooltip="1° posto — Giochi d'Autunno, Matematica (2015)">🏅</span>
+            <span class="life-cert-badge" data-tooltip="99/100 — quasi...">📋</span>
+          </div>
+        </div>
+
+        <!-- Card 4: Birmingham -->
+        <div class="life-card reveal" role="listitem">
+          <div class="life-card-stripe neutral"></div>
+          <h3 class="life-card-title">Birmingham</h3>
+          <p class="life-card-text">Ho vinto un programma di inglese di due settimane finanziato dall'UE a Birmingham, poco prima che la Brexit cambiasse le regole. Corso intensivo completato. Tornato con un inglese migliore e più sicurezza culturale.</p>
+          <div class="life-card-tags">
+            <span class="life-tag">Inglese</span>
+            <span class="life-tag">Scambio culturale</span>
+          </div>
+          <div class="life-cert-badges">
+            <span class="life-cert-badge" data-tooltip="Certificazione Cambridge C1 di inglese (2019)">🎖️</span>
+          </div>
+        </div>
+
+        <!-- Card 5: Materials Engineering -->
+        <div class="life-card reveal" role="listitem">
+          <div class="life-card-stripe mat"></div>
+          <h3 class="life-card-title">Ingegneria<br>dei Materiali</h3>
+          <p class="life-card-text">Laurea triennale in Scienza e Ingegneria dei Materiali alla Federico II. Tesi sull'acustica delle schiume poliuretaniche. Ora alla magistrale, con un focus personale sull'incontro tra materiali e suono.</p>
+          <div class="life-card-tags">
+            <span class="life-tag">Pensiero analitico</span>
+            <span class="life-tag">Problem solving</span>
+            <span class="life-tag">Lavoro di laboratorio</span>
+          </div>
+          <div class="life-cert-badges">
+            <span class="life-cert-badge" data-tooltip="Laurea triennale in Scienza e Ingegneria dei Materiali, L-9 — 101/110">🎓</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       MUSIC & SOUND
+       Three cards covering the arc from
+       production → live performance → formal
+       sound technician training.
+  ═══════════════════════════════════════ -->
+  <section id="music">
+
+    <div class="section-intro reveal">
+      <p class="eyebrow">Musica e Suono</p>
+      <h2 class="section-h" style="margin-bottom:0;">Percorso<br>Creativo</h2>
+    </div>
+
+    <div class="hscroll-wrap">
+      <div class="hscroll-track" role="list">
+
+        <!-- Card 1: Electronic Music Production -->
+        <div class="music-card reveal" role="listitem">
+          <div class="music-card-body">
+            <div class="life-card-stripe snd"></div>
+            <h3 class="music-card-title">Produzione<br>Musicale</h3>
+            <p class="music-card-text">Produttore autodidatta da quando avevo 14 anni. DAW: Ableton, Logic Pro, FL Studio, ProTools. Sound design, mixing, composizione. Un decennio di allenamento dell'orecchio.</p>
+          </div>
+        </div>
+
+        <!-- Card 2: Audio-Visual Live Performance -->
+        <div class="music-card reveal" role="listitem">
+          <div class="music-card-body">
+            <div class="life-card-stripe neutral"></div>
+            <h3 class="music-card-title">Audio-Visual</h3>
+            <p class="music-card-text">Il suono si è esteso a sistemi visivi in tempo reale con TouchDesigner. Quando l'audio diventa geometria. La performance come loop di feedback dal vivo tra segnale audio e immagini generate.</p>
+          </div>
+        </div>
+
+        <!-- Card 3: Sound Technician Certification -->
+        <div class="music-card reveal" role="listitem">
+          <div class="music-card-body">
+            <div class="life-card-stripe snd"></div>
+            <h3 class="music-card-title">Tecnico<br>del Suono</h3>
+            <p class="music-card-text">Approfondimento delle tematiche audio con la Regione Campania, Napoli. Focus su sound design, routing in sistemi audio e AV dal vivo e mixaggio live.</p>
+          </div>
+          <div class="life-cert-badges">
+            <span class="life-cert-badge" data-tooltip="Qualifica EQF 4">📜</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Releases — Spotify embeds carousel -->
+    <p class="releases-head reveal">Uscite</p>
+    <p class="releases-sub reveal">Produzione e Artwork</p>
+    <div class="hscroll-wrap">
+      <div class="hscroll-track releases-track" role="list">
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/6a1fwt1CKS29SBDwQy16wP?utm_source=generator" title="Dollar — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/0D4wYzpGaY7HM7ytaetimk?utm_source=generator" title="Nitemarez — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/1RoKDwToTQCpQzAMy1i5cs?utm_source=generator" title="Communicate — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/1kJEMtlqnHeY18igP45qjh?utm_source=generator" title="HART — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/3gUyQEIvWkvi42uvtr7YKC?utm_source=generator" title="Sunset Sherbet — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/1S1y4oX3mz7lhiZJFO6Lbb?utm_source=generator" title="Atto II — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/4W6kvnFFseeGNoE53wYz39?utm_source=generator" title="Hell's Doorbell — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/4oE9tuM4ywnvewaFuLW1YN?utm_source=generator" title="Plastic Flowers — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/585ZALNqabTS0KhxNgeAyW?utm_source=generator" title="Soldi &amp; Potere — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/2TCkRAkbMr6P2tdQ5WiOL4?utm_source=generator" title="Spine — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/5q1g07oJqtevSBCXYmkf1B?utm_source=generator" title="Communicate (Instrumental Version) — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       ACADEMY PROJECTS
+       iOS apps built at Apple Developer
+       Academy. One card per app.
+  ═══════════════════════════════════════ -->
+  <section id="projects">
+
+    <div class="section-intro reveal">
+      <p class="eyebrow">Apple Developer Academy 2025/2026</p>
+      <h2 class="section-h" style="margin-bottom:0;">@<br>Apple Developer Academy</h2>
+    </div>
+
+    <div class="hscroll-wrap">
+      <div class="hscroll-track" role="list">
+
+        <!-- 1 · Networks -->
+        <div class="app-card reveal" role="listitem">
+          <div class="app-card-top-stripe"></div>
+          <div class="app-icon app-icon--placeholder"></div>
+          <div class="app-name">Networks</div>
+          <div class="app-bottom">
+            <div class="app-desc">Mette in contatto persone con interessi comuni in luoghi diversi. Scopri community nel tuo campo.</div>
+            <div class="app-links">
+              <span class="app-link app-link--disabled">App Store</span>
+              <span class="app-link app-link--disabled">TestFlight</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2 · Compass -->
+        <div class="app-card reveal" role="listitem">
+          <div class="app-card-top-stripe"></div>
+          <div class="app-icon app-icon--placeholder"></div>
+          <div class="app-name">Compass</div>
+          <div class="app-bottom">
+            <div class="app-desc">App di oroscopo quotidiano basata su FoundationModels — totalmente locale e offline. Nessun server, nessun tracciamento.</div>
+            <div class="app-links">
+              <a href="https://github.com/haartt/Quotes" target="_blank" rel="noopener" class="app-link app-link--gh">GitHub ↗</a>
+              <span class="app-link app-link--disabled">TestFlight</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 · Storease -->
+        <div class="app-card reveal" role="listitem">
+          <div class="app-card-top-stripe"></div>
+          <div class="app-icon">
+            <img src="Resources/Academy/3.png" alt="Storease icon" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="app-name">Storease</div>
+          <div class="app-bottom">
+            <div class="app-desc">Inquadra una foto con la fotocamera — Vision + FoundationModels generano opzioni narrative ramificate sul dispositivo. I ricordi diventano racconto.</div>
+            <div class="app-links">
+              <span class="app-link app-link--disabled">App Store</span>
+              <a href="https://testflight.apple.com/join/sT3aReAsE" target="_blank" rel="noopener" class="app-link app-link--tf">TestFlight ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 · HeritageExplorer -->
+        <div class="app-card reveal" role="listitem">
+          <div class="app-card-top-stripe"></div>
+          <div class="app-icon app-icon--placeholder"></div>
+          <div class="app-name">Heritage Explorer</div>
+          <div class="app-bottom">
+            <div class="app-desc">Esperienza AR che sovrappone il contesto storico a ciò che ti circonda. Progetto in pausa — scrivimi se vuoi continuarlo.</div>
+            <div class="app-links">
+              <span class="app-link app-link--disabled">App Store</span>
+              <a href="https://testflight.apple.com/join/hErItAgE0" target="_blank" rel="noopener" class="app-link app-link--tf">TestFlight ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 · 2089: The Breaking Point -->
+        <div class="app-card reveal" role="listitem">
+          <div class="app-card-top-stripe"></div>
+          <div class="app-icon">
+            <img src="Resources/Academy/5.png" alt="2089 icon" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="app-name">2089</div>
+          <div class="app-bottom">
+            <div class="app-desc">Gioco decisionale ambientato al punto di rottura dell'umanità. Tre fazioni, un giocatore — le tue scelte determinano l'esito.</div>
+            <div class="app-links">
+              <span class="app-link app-link--disabled">App Store</span>
+              <a href="https://testflight.apple.com/join/2O89bRkPt" target="_blank" rel="noopener" class="app-link app-link--tf">TestFlight ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 · Zest -->
+        <div class="app-card reveal" role="listitem">
+          <div class="app-card-top-stripe"></div>
+          <div class="app-icon app-icon--placeholder"></div>
+          <div class="app-name">Zest</div>
+          <div class="app-bottom">
+            <div class="app-desc">App per la corsa che modula i parametri di riproduzione audio in tempo reale in base al tuo movimento. Il movimento diventa lo strumento.</div>
+            <div class="app-links">
+              <span class="app-link app-link--disabled">App Store</span>
+              <span class="app-link app-link--disabled">TestFlight</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7 · Tinto -->
+        <div class="app-card reveal" role="listitem">
+          <div class="app-card-top-stripe"></div>
+          <div class="app-icon">
+            <img src="Resources/Academy/7.png" alt="Tinto icon" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <div class="app-name">Tinto</div>
+          <div class="app-bottom">
+            <div class="app-desc">Compagno da museo per bambini. Scansiona un'opera, estrai la sua palette, mescola i colori primari per sbloccare ogni tonalità.</div>
+            <div class="app-links">
+              <a href="https://apps.apple.com/in/app/tinto-your-museum-buddy/id6777824863" target="_blank" rel="noopener" class="app-link app-link--store">App Store ↗</a>
+              <a href="https://testflight.apple.com/join/9Qy3SEjM" target="_blank" rel="noopener" class="app-link app-link--tf">TestFlight ↗</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       FEATURED PROJECT — POCKETCHOP
+       Sample slicer + step sequencer for iPad.
+       Swift Student Challenge 2026 winner.
+  ═══════════════════════════════════════ -->
+  <section id="featured" aria-label="Progetto in evidenza — PocketChop">
+
+    <div class="reveal">
+      <span class="featured-badge">★ Swift Student Challenge 2026 — Vincitore</span>
+    </div>
+
+    <div class="featured-layout">
+
+      <!-- Left: icon, title, metadata, TestFlight link -->
+      <div class="featured-left reveal">
+        <img src="Resources/PocketChop/PocketChopICON.png" alt="PocketChop app icon" class="pc-icon" loading="lazy" decoding="async">
+        <h2 class="featured-title">Pocket<br><em>Chop</em></h2>
+        <p class="featured-tagline">Sample slicer e step sequencer per iPad. Realizzato interamente in Swift Playgrounds.</p>
+        <div class="featured-meta">
+          <div class="featured-meta-item">
+            <span class="featured-meta-key">Piattaforma</span>
+            <span class="featured-meta-val">iPad · iPadOS 18.1+</span>
+          </div>
+          <div class="featured-meta-item">
+            <span class="featured-meta-key">Anno</span>
+            <span class="featured-meta-val">2026</span>
+          </div>
+          <div class="featured-meta-item">
+            <span class="featured-meta-key">Premio</span>
+            <span class="featured-meta-val"><a href="https://developer.apple.com/swift-student-challenge/" target="_blank" rel="noopener">Swift Student Challenge — WWDC 2026 ↗</a></span>
+          </div>
+          <div class="featured-meta-item">
+            <span class="featured-meta-key">Stack</span>
+            <span class="featured-meta-val">SwiftUI · AVFoundation · UIKit · <a href="https://github.com/audiokit/audiokit" target="_blank" rel="noopener">AudioKit ↗</a></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: what it is + personal context -->
+      <div class="featured-right reveal">
+
+        <div class="featured-section">
+          <p class="featured-section-label">Cosa fa</p>
+          <p class="featured-section-text">Importa qualsiasi file audio, taglialo in un massimo di 16 regioni con nome, assegna ciascuna a un pad e costruisci pattern in uno <strong>step sequencer a 64 step</strong>. Include piano roll, FX per singolo pad, inviluppi ADSR e registrazione del mix completo — tutto offline, senza internet. Linguaggio di design ispirato all'hardware di teenage engineering.</p>
+        </div>
+
+        <div class="featured-section">
+          <p class="featured-section-label">Perché l'ho creato</p>
+          <p class="featured-section-text">Volevo un vero strumento di produzione che girasse interamente su iPad — niente laptop, niente abbonamento. PocketChop sta al centro delle tre cose che faccio: <strong>suono, precisione ingegneristica e artigianato iOS</strong>.</p>
+          <div class="pc-cta-row">
+            <a href="https://testflight.apple.com/join/cAkjF7J" target="_blank" rel="noopener" class="pc-testflight-btn">Prova su TestFlight ↗</a>
+            <span class="pc-testflight-btn pc-testflight-btn--soon">App Store — In arrivo</span>
+            <a href="https://github.com/haartt/PocketChop-WWDC26" target="_blank" rel="noopener" class="pc-testflight-btn">Vedi su GitHub ↗</a>
+            <a href="https://haartt.github.io/PocketChop/" target="_blank" rel="noopener" class="pc-testflight-btn">Privacy e descrizione ↗</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       CONTACT
+  ═══════════════════════════════════════ -->
+  <section id="contact">
+
+    <div class="contact-top reveal">
+      <div class="contact-cta">
+        Restiamo<br>in contatto!
+      </div>
+    </div>
+
+    <div class="contact-links-row reveal">
+      <a href="mailto:fabioantonucci6@icloud.com" class="contact-link-block">
+        <span class="contact-link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg></span>
+        <span class="contact-link-label">Email</span>
+        <span class="contact-link-val">fabioantonucci6@icloud.com</span>
+      </a>
+      <a href="https://www.linkedin.com/in/fabio-antonucci-8008522a6/" target="_blank" rel="noopener" class="contact-link-block">
+        <span class="contact-link-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></span>
+        <span class="contact-link-label">LinkedIn</span>
+        <span class="contact-link-val">Fabio Antonucci</span>
+      </a>
+      <a href="https://instagram.com/its.haartt" target="_blank" rel="noopener" class="contact-link-block">
+        <span class="contact-link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span>
+        <span class="contact-link-label">Instagram</span>
+        <span class="contact-link-val">@its.haartt</span>
+      </a>
+      <a href="https://github.com/haartt" target="_blank" rel="noopener" class="contact-link-block">
+        <span class="contact-link-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.42c.58.1.79-.25.79-.56v-2.02c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.76.4-1.27.74-1.56-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.41-5.26 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></span>
+        <span class="contact-link-label">GitHub</span>
+        <span class="contact-link-val">haartt</span>
+      </a>
+    </div>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+  <footer>
+    <span class="footer-left">© Fabio Antonucci · Napoli · 2026</span>
+    <span class="footer-time" id="footer-time"></span>
+  </footer>
+
+
+  <script>
+    // ─── Theme toggle (Light ↔ Dark) ──────────────────────────────────────
+    // Reads saved preference from localStorage on load.
+    // On click, flips the data-theme attribute on <html> and saves the choice.
+    const root = document.documentElement;
+    const btn  = document.getElementById('theme-toggle');
+    const saved = localStorage.getItem('fa-theme');
+    if (saved) root.dataset.theme = saved;
+
+    function syncLabel() {
+      btn.textContent = root.dataset.theme === 'light' ? 'Scuro' : 'Chiaro';
+    }
+    syncLabel();
+
+    btn.addEventListener('click', () => {
+      const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+      root.dataset.theme = next;
+      localStorage.setItem('fa-theme', next);
+      syncLabel();
+    });
+
+
+    // ─── Navbar brand swap ────────────────────────────────────────────────
+    // Watches the cover image with IntersectionObserver.
+    // When cover image is fully out of view (scrolled past), the class
+    // "hero-pinned" is added to the navbar, which CSS uses to:
+    //   - fade out  logo + "HART"
+    //   - fade in   "Fabio Antonucci"
+    const navbar = document.getElementById('navbar');
+    const cover  = document.getElementById('cover-gallery');
+
+    if (navbar && cover) {
+      new IntersectionObserver(([entry]) => {
+        navbar.classList.toggle('hero-pinned', !entry.isIntersecting);
+      }, { threshold: 0 }).observe(cover);
+    }
+
+
+    // ─── Live Napoli time in footer ───────────────────────────────────────
+    // Displays current time in the Europe/Rome timezone, updated every 30s.
+    function tick() {
+      const el = document.getElementById('footer-time');
+      if (!el) return;
+      el.textContent = 'IT · ' + new Date().toLocaleTimeString('en-GB', {
+        timeZone: 'Europe/Rome',
+        hour:     '2-digit',
+        minute:   '2-digit',
+        hour12:   true,
+      });
+    }
+    tick();
+    setInterval(tick, 30000);
+
+
+    // ─── Scroll reveal ────────────────────────────────────────────────────
+    // Elements with class "reveal" start invisible (opacity:0, slight offset).
+    // IntersectionObserver adds class "in" when they enter the viewport,
+    // triggering a CSS fade-in + slide-up transition.
+    // Each element gets a small staggered delay so groups animate in sequence.
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          revealObserver.unobserve(entry.target); // only animate once
+        }
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+      el.style.transitionDelay = (i % 5) * 0.06 + 's';
+      revealObserver.observe(el);
+    });
+
+
+    // ─── Badge tap-to-show tooltip (mobile) ──────────────────────────────
+    // On touch devices hover doesn't fire, so tapping a badge toggles its
+    // tooltip. Tapping anywhere else dismisses all open tooltips.
+    document.querySelectorAll('.life-cert-badge').forEach(badge => {
+      badge.addEventListener('click', e => {
+        const isActive = badge.classList.contains('active');
+        document.querySelectorAll('.life-cert-badge.active').forEach(b => b.classList.remove('active'));
+        if (!isActive) badge.classList.add('active');
+        e.stopPropagation();
+      });
+    });
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.life-cert-badge.active').forEach(b => b.classList.remove('active'));
+    });
+
+
+  </script>
+
+</body>
+</html>

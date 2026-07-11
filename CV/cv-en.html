@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Fabio Antonucci — CV</title>
+<style>
+  /* ---- Fonts: SF Pro ---- */
+  :root{
+    --ff-display:"SF Pro Display",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    --ff-text:"SF Pro Text","SF Pro Display",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  }
+  /* ---- Light theme (default) — portfolio cream + blue ---- */
+  :root{
+    --page:#ffffff; --outer:#f8f6f1;
+    --ink:#0a0a0a; --muted:#5b5b6b; --desc:#3a3a44;
+    --accent:#64748b; --accent2:#00C48C; --line:#e3e2dc;
+  }
+  /* ---- Dark theme — portfolio black + cyan ---- */
+  html[data-theme="dark"]{
+    --page:#0b0b0d; --outer:#000000;
+    --ink:#f4f4f7; --muted:#9a9aa6; --desc:#c6c6d0;
+    --accent:#94a3b8; --accent2:#22c39a; --line:#26262e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--outer)}
+  body{
+    font-family:var(--ff-text); color:var(--ink);
+    font-size:9.1px; line-height:1.34; -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+  .page{
+    width:210mm; height:297mm; margin:0 auto; background:var(--page); overflow:hidden;
+    padding:11mm 12mm 9mm; display:flex; flex-direction:column;
+  }
+  /* floating controls — screen only (index.html style: mono, uppercase, bordered) */
+  .controls{position:fixed; top:14px; right:18px; z-index:9; display:flex; gap:7px}
+  .ctrl{
+    font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:9px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink); background:var(--page);
+    border:1px solid var(--line); border-radius:5px; padding:7px 10px; cursor:pointer;
+    text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+    box-shadow:0 4px 16px rgba(0,0,0,.14);
+  }
+  .ctrl:hover{border-color:var(--muted)}
+  .ctrl .dot{width:8px; height:8px; border-radius:50%; background:var(--accent)}
+  .head-row{display:flex; align-items:stretch; gap:14px}
+  .head-txt{flex:1; min-width:0; min-height:33mm; display:flex; flex-direction:column; justify-content:center; gap:6px}
+  .photo{
+    width:26mm; height:33mm; object-fit:cover; border-radius:3px;
+    border:1px solid var(--line); flex:none;
+  }
+  h1{font-family:var(--ff-display); font-size:25px; letter-spacing:.4px; color:var(--ink); font-weight:700; line-height:1}
+  .role{font-size:10px; color:var(--muted); margin-top:0; letter-spacing:.3px}
+  .role b{color:var(--accent); font-weight:600}
+  .contacts{font-size:8.4px; color:var(--muted); margin-top:0; line-height:1.5}
+  .contacts a{color:var(--accent); text-decoration:none}
+  .contacts a.portfolio{font-weight:700; font-size:9.6px; letter-spacing:.2px; color:#0072B2; border-bottom:1.5px solid #0072B2}
+  .hr{height:2px; background:var(--accent); margin:8px 0 9px; border-radius:2px}
+  .cols{display:flex; gap:11px; flex:1}
+  .main{flex:1.85; min-width:0}
+  .side{flex:1; min-width:0; border-left:1px solid var(--line); padding-left:10px}
+  h2{
+    font-family:var(--ff-display); font-size:9.3px; text-transform:uppercase; letter-spacing:1.1px; color:var(--accent);
+    font-weight:700; margin:9px 0 5px; padding-bottom:2px; border-bottom:1px solid var(--line);
+  }
+  h2:first-child{margin-top:0}
+  .item{margin-bottom:4.5px; padding-left:7px; border-left:2px solid var(--line)}
+  /* per-entry bars — 3-colour system, colourblind-safe (fixed across themes) */
+  .c-uni{border-color:#00C48C} /* green — university & materials */
+  .c-edu{border-color:#0072B2} /* blue — education of any kind */
+  .c-exp{border-color:#F77402} /* orange — working experience */
+  .item .top{display:flex; justify-content:space-between; gap:8px}
+  .item .ttl{font-family:var(--ff-display); font-weight:600; color:var(--ink)}
+  .item .when{color:var(--muted); font-size:8px; white-space:nowrap; font-style:italic}
+  .item .org{color:var(--muted); font-style:italic; font-size:8.5px}
+  .item .desc{color:var(--desc); margin-top:1px}
+  /* nested branch — bar colour by class, label uses ink (no coloured text) */
+  .sub{margin-top:2px; padding-left:8px; border-left:2px solid var(--line); color:var(--desc)}
+  .sub b{color:var(--ink)}
+  .sub.grn{border-color:#00C48C} /* green — university/materials */
+  .sub.org{border-color:#F77402} /* orange — working experience */
+  .skline{margin-bottom:4px}
+  .skline b{display:block; font-family:var(--ff-display); color:var(--accent); font-size:8.2px; text-transform:uppercase; letter-spacing:.5px; font-weight:600}
+  .skline{color:var(--desc)}
+  ul{list-style:none}
+  .certs li, .lang li{margin-bottom:3px; padding-left:9px; position:relative; color:var(--desc)}
+  .certs li::before, .lang li::before{content:"▪"; position:absolute; left:0; color:var(--accent); font-size:7px; top:1px}
+  .lang li b{color:var(--ink)}
+  .interests{color:var(--desc)}
+  @media print{ .controls{display:none} html,body{background:#fff} .page{margin:0; box-shadow:none} }
+  @page{size:A4; margin:0}
+</style>
+</head>
+<body>
+<div class="controls">
+  <a class="ctrl" href="cv-it.html" title="Cambia lingua — Italiano">IT</a>
+  <button class="ctrl" onclick="window.print()" title="Export / save as PDF">↓ PDF</button>
+  <button class="ctrl" onclick="tg()"><span class="dot"></span><span id="tgl">Dark</span></button>
+</div>
+<div class="page">
+
+  <header class="head-row">
+    <img class="photo" src="CV-photo.png" alt="Fabio Antonucci">
+    <div class="head-txt">
+      <h1>FABIO ANTONUCCI</h1>
+      <div class="role">Materials Engineer &nbsp;·&nbsp; iOS Developer &nbsp;·&nbsp; Music Producer</div>
+      <div class="contacts">
+        <a href="mailto:fabioantonucci6@icloud.com">fabioantonucci6@icloud.com</a> &nbsp;·&nbsp; +39 333 82 80 335 &nbsp;·&nbsp; Naples, Italy &nbsp;·&nbsp; 27 May 2001<br>
+        <a class="portfolio" href="https://haartt.github.io">↗ haartt.github.io — Portfolio</a> &nbsp;·&nbsp; <a href="https://linkedin.com/in/fabio-antonucci-8008522a6">linkedin.com/in/fabio-antonucci-8008522a6</a> &nbsp;·&nbsp; <a href="https://github.com/haartt">github.com/haartt</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="hr"></div>
+
+  <div class="cols">
+    <!-- MAIN -->
+    <div class="main">
+
+      <h2>Profile</h2>
+      <p class="desc">Materials Engineering graduate (BSc, Federico II, 101/110) currently enrolled in the Materials Engineering MSc. Certified Sound Technician (EQF 4) and self-taught music producer. iOS developer at the Apple Developer Academy in Naples and winner of Apple's Swift Student Challenge 2026. Versatile profile bridging engineering, audio, and software, driven by curiosity, problem solving, and teamwork.</p>
+
+      <h2>Education</h2>
+      <div class="item c-uni">
+        <div class="top"><span class="ttl">MSc Materials Engineering</span><span class="when">Oct 2024 – Present</span></div>
+        <div class="org">Università degli Studi di Napoli Federico II</div>
+      </div>
+      <div class="item c-edu">
+        <div class="top"><span class="ttl">Apple Developer Academy</span><span class="when">Oct 2024 – Present</span></div>
+        <div class="org">Università degli Studi di Napoli Federico II</div>
+        <div class="desc">Full-time iOS development programme. Built 7 apps across team and solo projects; winner of the Swift Student Challenge 2026.</div>
+      </div>
+      <div class="item c-edu">
+        <div class="top"><span class="ttl">Sound Technician — EQF Level 4</span><span class="when">2024 – 2025</span></div>
+        <div class="org">Regione Campania</div>
+        <div class="desc">Regionally funded qualification, delivered through ACTA as the accredited training body linking Regione Campania to the course. Covered sound design, signal routing in live audio and AV systems, live mixing, and studio recording techniques.</div>
+        <div class="sub org"><b>Stage (internship):</b> Teatro TAN, Piscinola (Naples) — hands-on live-audio, live mixing, and stage AV work.</div>
+      </div>
+      <div class="item c-uni">
+        <div class="top"><span class="ttl">BSc Materials Science &amp; Engineering (L-9) — 101/110</span><span class="when">2019 – 2024</span></div>
+        <div class="org">Università degli Studi di Napoli Federico II</div>
+        <div class="desc">Thesis: sound-absorbing porous materials for room acoustic treatment — polyol- and isocyanate-based foams.</div>
+        <div class="sub org"><b>Laboratory activities (2020–2024):</b> hands-on lab work in rheology, absorption spectroscopy, chemical foaming of polyurethanes, and general chemistry.</div>
+      </div>
+      <div class="item c-edu">
+        <div class="top"><span class="ttl">Scientific High School Diploma — 99/100</span><span class="when">2014 – 2019</span></div>
+        <div class="org">Liceo Scientifico Tito Lucrezio Caro</div>
+      </div>
+      <div class="item c-edu">
+        <div class="top"><span class="ttl">Intensive English Course (C1)</span><span class="when">Jul – Aug 2018</span></div>
+        <div class="org">Bournville College, Birmingham, UK</div>
+        <div class="desc">Summer immersion programme fully funded by the European Union: classroom study, exams and a homestay abroad, reaching C1 level and strengthening cultural exchange.</div>
+      </div>
+
+      <h2>Experience</h2>
+      <div class="item c-exp">
+        <div class="top"><span class="ttl">iOS Developer</span><span class="when">2024 – Present</span></div>
+        <div class="org">Apple Developer Academy &amp; freelance</div>
+        <div class="desc">Designing and shipping SwiftUI apps, several with on-device AI (FoundationModels, Vision). Released on the App Store and TestFlight.</div>
+      </div>
+      <div class="item c-exp">
+        <div class="top"><span class="ttl">Music Producer</span><span class="when">2014 – Present</span></div>
+        <div class="org">Self-employed</div>
+        <div class="desc">Self-taught producer covering composition, sound design, mixing and mastering across genres. Audio-visual live performance using TouchDesigner for real-time generative visuals. DAWs: Ableton Live, Logic Pro, FL Studio.</div>
+      </div>
+      <div class="item c-exp">
+        <div class="top"><span class="ttl">Bar Staff</span><span class="when">Nov – Dec 2023</span></div>
+        <div class="org">Vesuvius Soul Records, Naples</div>
+      </div>
+
+      <h2>Selected Projects — Apple Developer Academy</h2>
+      <div class="item c-edu">
+        <div class="top"><span class="ttl">PocketChop — coming soon on the App Store</span><span class="when">2026</span></div>
+        <div class="desc">Swift Student Challenge 2026 winner. Built in Swift Playgrounds — SwiftUI · AVFoundation · AudioKit.</div>
+      </div>
+      <div class="item c-edu">
+        <div class="top"><span class="ttl">Tinto — App Store</span><span class="when">2026</span></div>
+        <div class="desc">Museum companion for children: scan artwork, extract its colour palette, mix primary colours to unlock each shade.</div>
+      </div>
+      <div class="item c-edu">
+        <div class="top"><span class="ttl">Storease — currently on TestFlight</span><span class="when">2026</span></div>
+        <div class="desc">Point the camera at a photo — Vision and FoundationModels (on-device LLM) generate branching story options. Memories become narrative.</div>
+      </div>
+      <div class="item c-edu">
+        <div class="top"><span class="ttl">2089 — currently on TestFlight</span><span class="when">2026</span></div>
+        <div class="desc">Decision-making narrative game set at humanity's breaking point. Three factions, one player, branching outcomes.</div>
+      </div>
+
+    </div>
+
+    <!-- SIDE -->
+    <div class="side">
+
+      <h2>Skills</h2>
+      <div class="skline"><b>Programming</b>Swift / SwiftUI · UIKit · AVFoundation · Xcode / Xcode Cloud · C++ · SonicPi</div>
+      <div class="skline"><b>Audio</b>Ableton Live · Logic Pro · FL Studio · Pro Tools · Sound design · Live mixing</div>
+      <div class="skline"><b>Design</b>Cover artwork, t-shirt &amp; sticker design for music releases and personal projects · poster &amp; merch graphics · illustration · brand &amp; layout</div>
+      <div class="skline"><b>Visual / 3D</b>TouchDesigner · Illustrator · Photoshop · After Effects · Premiere Pro · Affinity · Blender</div>
+      <div class="skline"><b>Engineering</b>Materials characterisation · Acoustic testing · Lab instrumentation · COMSOL Multiphysics · MATLAB · AutoCAD</div>
+      <div class="skline"><b>Productivity</b>Google Workspace · Git / GitHub · MS Office · Figma</div>
+
+      <h2>Languages</h2>
+      <ul class="lang">
+        <li><b>Italian</b> — Native</li>
+        <li><b>English</b> — C1, Cambridge Advanced</li>
+        <li><b>Spanish</b> — Basic</li>
+      </ul>
+
+      <h2>Certifications &amp; Awards</h2>
+      <ul class="certs">
+        <li>Swift Student Challenge 2026 — Winner (Apple WWDC)</li>
+        <li>Sound Technician — EQF Level 4, Regione Campania (2025)</li>
+        <li>Cambridge English C1 Advanced</li>
+        <li>Cambridge English B1, B2</li>
+        <li>1st place, C2 category — Giochi d'Autunno Mathematics (2015)</li>
+      </ul>
+
+      <h2>Driving Licence</h2>
+      <p>A1 · A2 · B</p>
+
+      <h2>Interests</h2>
+      <p class="interests">Acoustic materials research · Electronic music &amp; live AV performance · Sound design · AI / LLM · iOS &amp; Swift development · Graphic design &amp; illustration · Cultural exchange</p>
+
+    </div>
+  </div>
+</div>
+<script>
+  function tg(){
+    var d=document.documentElement.getAttribute('data-theme')==='dark';
+    document.documentElement.setAttribute('data-theme', d?'light':'dark');
+    document.getElementById('tgl').textContent=d?'Dark':'Light';
+    try{localStorage.setItem('cvtheme', d?'light':'dark')}catch(e){}
+  }
+  (function(){var t=null;try{t=localStorage.getItem('cvtheme')}catch(e){}
+    if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('tgl').textContent='Light';}})();
+</script>
+</body>
+</html>
