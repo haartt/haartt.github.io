@@ -12,25 +12,21 @@
 
 ---
 
-This is my corner of the internet — one continuous story told in three languages.
+My little corner of the internet.
 
-Materials engineering student, electronic music producer, iOS developer. Three things that look like separate careers but are really the same curiosity changing instruments. The site walks through it in the order it actually happened: the drawing, the first broken laptop, a decade behind a DAW, the Apple Developer Academy, and [PocketChop](https://apps.apple.com/it/app/pocketchop/id6770474050?l=en-GB) — a sample slicer for iPad that won the Swift Student Challenge 2026.
+Materials engineering student, electronic music producer, iOS developer. 
 
 ## How it's built
 
 By hand, on purpose.
 
-Each page is a single self-contained HTML file — markup, styles, and the little JavaScript it needs, all in one place. No framework, no build step, no dependencies. Clone it, open it, read it.
-
+Each page is a single self-contained HTML file — markup, styles, and the little JavaScript it needs, all in one place. No framework, no build step, no dependencies.
 ```
 index.html        English
 index-it.html     Italiano
 index-es.html     Español
-CV/               curriculum, in both languages and both themes
 Resources/        artwork, photos, app icons
 ```
-
-Dark and light themes, drawn artwork for each. The music is mine, the code is mine, the sketches are mine.
 
 ## A note on the Resources folder
 
