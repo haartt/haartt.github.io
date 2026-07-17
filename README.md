@@ -1,6 +1,6 @@
 <p align="center">
   <br>
-  <strong>Fabio Antonucci</strong> · <em>Hart</em>
+  <strong>Fabio Antonucci</strong> · <em>@its.haartt</em>
   <br>
   <sub>Napoli, Italy</sub>
   <br><br>
