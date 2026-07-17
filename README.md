@@ -5,7 +5,7 @@
   <sub>Napoli, Italy</sub>
   <br><br>
   <a href="https://haartt.github.io">
-    <img src="https://img.shields.io/badge/open%20the%20site-black?style=for-the-badge" alt="Open the site" width="220">
+    <img src="https://img.shields.io/badge/click-black?style=for-the-badge" alt="Click" width="220">
   </a>
   <br><br>
 </p>
