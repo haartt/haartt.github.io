@@ -20,7 +20,7 @@ Materials engineering student, electronic music producer, iOS developer.
 
 By hand, on purpose.
 
-Each page is a single self-contained HTML file — markup, styles, and the little JavaScript it needs, all in one place. No framework, no build step, no dependencies.
+Each page is a single self-contained HTML file — markup, styles, and the little JavaScript it needs, all in one place.
 ```
 index.html        English
 index-it.html     Italiano
@@ -30,7 +30,7 @@ Resources/        artwork, photos, app icons
 
 ## A note on the Resources folder
 
-Everything inside `Resources/` — artwork, photographs, illustrations, app icons, cover art — is my own work and is **protected by copyright. All rights reserved.** It is published here so the site can render, not for reuse. Please don't copy, redistribute, or use it in your own projects without asking me first.
+Everything inside `Resources/` — artwork, photographs, illustrations, app icons, cover art — is my own work and is **protected by copyright. All rights reserved.** It is published here so the site can render, not for reuse. Please don't copy, redistribute, or use it in your own projects without asking.
 
 The code itself you're welcome to read and learn from.
 
