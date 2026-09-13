@@ -1845,5 +1845,111 @@
 
   </script>
 
+  <script>
+const canvas = document.getElementById('logoCanvas');
+const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+// Setup configurations
+const MAX_PIXEL_SIZE = 6;  // Starting pixel size (looks blocky on a small 28x28 logo)
+const MIN_PIXEL_SIZE = 1;  // Ending pixel size (perfectly crisp)
+const SPEED = 0.3;         // Speed of de-pixelation
+
+let currentPixelSize = MAX_PIXEL_SIZE;
+let isHovered = false;
+let animationFrameId;
+const img = new Image();
+
+// Function to determine which logo asset to load based on dark/light mode
+function updateLogoSource() {
+    // Check if body has a 'dark' class, a data theme attribute, or falls back to system preferences
+    const isDarkMode = document.body.classList.contains('dark') || 
+                       document.documentElement.getAttribute('data-theme') === 'dark' ||
+                       window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // Choose the right source asset from our HTML data attributes
+    const newSrc = isDarkMode ? canvas.getAttribute('data-src-dark') : canvas.getAttribute('data-src-light');
+    
+    if (img.src !== newSrc) {
+        img.src = newSrc;
+    }
+}
+
+// Draw the pixelated states onto the 28x28 grid
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    if (currentPixelSize <= 1) {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        return;
+    }
+
+    // Step through the 28x28 frame to create pixel clusters
+    for (let y = 0; y < canvas.height; y += currentPixelSize) {
+        for (let x = 0; x < canvas.width; x += currentPixelSize) {
+            
+            const sampleX = Math.min(x + Math.floor(currentPixelSize / 2), canvas.width - 1);
+            const sampleY = Math.min(y + Math.floor(currentPixelSize / 2), canvas.height - 1);
+            
+            // Draw temporarily to read the pixel color values safely
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            const pixelData = ctx.getImageData(sampleX, sampleY, 1, 1).data;
+            
+            // Reapply the solid color blocks
+            ctx.fillStyle = `rgba(${pixelData[0]}, ${pixelData[1]}, ${pixelData[2]}, ${pixelData[3]/255})`;
+            ctx.fillRect(x, y, currentPixelSize, currentPixelSize);
+        }
+    }
+}
+
+// Keep the transition animating smoothly frame-by-frame
+function updateTransition() {
+    if (isHovered) {
+        if (currentPixelSize > MIN_PIXEL_SIZE) {
+            currentPixelSize -= SPEED;
+            if (currentPixelSize < MIN_PIXEL_SIZE) currentPixelSize = MIN_PIXEL_SIZE;
+            draw();
+            animationFrameId = requestAnimationFrame(updateTransition);
+        }
+    } else {
+        if (currentPixelSize < MAX_PIXEL_SIZE) {
+            currentPixelSize += SPEED;
+            if (currentPixelSize > MAX_PIXEL_SIZE) currentPixelSize = MAX_PIXEL_SIZE;
+            draw();
+            animationFrameId = requestAnimationFrame(updateTransition);
+        }
+    }
+}
+
+// Initialize the logo
+img.onload = () => {
+    draw();
+};
+updateLogoSource();
+
+// Hover interactions
+canvas.addEventListener('mouseenter', () => {
+    isHovered = true;
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = requestAnimationFrame(updateTransition);
+});
+
+canvas.addEventListener('mouseleave', () => {
+    isHovered = false;
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = requestAnimationFrame(updateTransition);
+});
+
+// Watch for dark/light mode toggle clicks if you have a switch button
+const themeToggleBtn = document.querySelector('.theme-toggle'); // Change to match your actual theme toggle button class if you have one
+if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+        setTimeout(() => {
+            updateLogoSource();
+            draw();
+        }, 50); // Small delay to let classes update first
+    });
+}
+</script>
+
 </body>
 </html>
