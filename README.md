@@ -12,13 +12,11 @@
 
 ---
 
-My little corner of the internet.
+About me.
 
-Materials engineering student, electronic music producer, iOS developer. 
+#materialsengineering #musicproduction #coding #design
 
 ## How it's built
-
-By hand, on purpose.
 
 Each page is a single self-contained HTML file — markup, styles, and the little JavaScript it needs, all in one place.
 ```
