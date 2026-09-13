@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>haartt.github.io</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Fabio Antonucci — Materials Engineering master's student at Federico II, electronic music producer (Hart), Apple Developer Academy alumnus and Swift Student Challenge 2026 winner. Napoli, Italy."/>
+  <meta name="author" content="Fabio Antonucci"/>
+  <link rel="canonical" href="https://fabioantonucci.com/"/>
+
+  <!-- Theme colour follows light/dark -->
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)"/>
+  <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)"/>
+
+  <!-- Favicon / touch icon -->
+  <link rel="icon" href="Resources/hartTee_dark.png"/>
+  <link rel="apple-touch-icon" href="Resources/hartTee_dark.png"/>
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Fabio Antonucci — Engineer · Producer · iOS Developer"/>
+  <meta property="og:description" content="Materials Engineering, electronic music (Hart), and iOS craft. Swift Student Challenge 2026 winner. Napoli, Italy."/>
+  <meta property="og:image" content="Resources/artworkDark.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+
+  <!-- Fonts: SF Pro on Apple devices via -apple-system; Inter as the
+       closest cross-platform fallback. SF Mono / ui-monospace for labels. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <!-- Disable browser scroll restoration as early as possible so page always opens at top -->
+  <script>history.scrollRestoration = 'manual'; window.scrollTo(0, 0);</script>
+
+  <style>
+
+    /* ─────────────────────────────────────────
+       RESET
+    ───────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ─────────────────────────────────────────
+       DESIGN TOKENS — DARK MODE (default)
+       macOS Sequoia inspired: hairline rules,
+       moderate radii, layered surfaces.
+         --bg        page background
+         --surface   card / window background
+         --text      primary text
+         --muted     secondary text
+         --accent    system blue
+         --mat/--snd/--cod  domain colours
+         --pc        PocketChop orange
+         --rule      hairline dividers
+         --radius    window corner radius
+    ───────────────────────────────────────── */
+    :root, [data-theme="dark"] {
+      --bg:            #000;
+      --surface:       #141416;
+      --surface-2:     #1d1d1f;
+      --text:          #f5f5f7;
+      --muted:         #98989d;
+      --accent:        #0A84FF;
+      --mat:           #6FA89A;
+      --snd:           #C99F6E;
+      --cod:           #9C9CCB;
+      --pc:            #F07C2A;
+      --rule:          rgba(255,255,255,0.11);
+      --hover-surface: rgba(255,255,255,0.05);
+      --shadow-card:   0 0 0 0.5px rgba(255,255,255,0.06), 0 8px 28px rgba(0,0,0,0.55);
+      --shadow-window: 0 0 0 0.5px rgba(255,255,255,0.08), 0 24px 60px rgba(0,0,0,0.65);
+      --radius:        10px;
+      --ff-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --ff-body:    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --ff-mono:    ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+    }
+
+    /* ─────────────────────────────────────────
+       DESIGN TOKENS — LIGHT MODE OVERRIDES
+       Apple light grey canvas, white cards.
+    ───────────────────────────────────────── */
+    [data-theme="light"] {
+      --bg:            #f5f5f7;
+      --surface:       #ffffff;
+      --surface-2:     #fbfbfd;
+      --text:          #1d1d1f;
+      --muted:         #6e6e73;
+      --accent:        #0071e3;
+      --mat:           #2e6e62;
+      --snd:           #8c6530;
+      --cod:           #4a4a9a;
+      --pc:            #C55F10;
+      --rule:          rgba(0,0,0,0.10);
+      --hover-surface: rgba(0,0,0,0.03);
+      --shadow-card:   0 0 0 0.5px rgba(0,0,0,0.04), 0 2px 6px rgba(0,0,0,0.05), 0 12px 28px rgba(0,0,0,0.07);
+      --shadow-window: 0 0 0 0.5px rgba(0,0,0,0.06), 0 24px 60px rgba(0,0,0,0.16);
+    }
+
+    /* ─────────────────────────────────────────
+       BASE
+    ───────────────────────────────────────── */
+    html { scroll-behavior: smooth; }
+    body {
+      background:  var(--bg);
+      color:       var(--text);
+      font-family: var(--ff-body);
+      -webkit-font-smoothing: antialiased;
+      overflow-x:  clip;
+    }
+
+    /* ─────────────────────────────────────────
+       NAVBAR — frosted toolbar, hairline bottom
+    ───────────────────────────────────────── */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: calc(0.6rem + env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) 0.6rem max(1.5rem, env(safe-area-inset-left));
+      backdrop-filter: blur(28px) saturate(180%) brightness(0.75);
+      -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(0.75);
+      background: rgba(0,0,0,0.32);
+      border-bottom: 0.5px solid rgba(255,255,255,0.10);
+    }
+    [data-theme="light"] #navbar {
+      backdrop-filter: blur(28px) saturate(180%) brightness(1.06);
+      -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(1.06);
+      background: rgba(245,245,247,0.62);
+      border-bottom: 0.5px solid rgba(0,0,0,0.10);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .nav-logo {
+      height: 26px;
+      width: 26px;
+      display: block;
+      object-fit: contain;
+    }
+    .nav-logo--dark  { display: block; }
+    .nav-logo--light { display: none;  }
+    [data-theme="light"] .nav-logo--dark  { display: none;  }
+    [data-theme="light"] .nav-logo--light { display: block; }
+
+    .nav-wordmark {
+      font-family:    var(--ff-display);
+      font-weight:    700;
+      font-size:      0.95rem;
+      letter-spacing: 0.06em;
+      color:          var(--text);
+    }
+
+    /* "Fabio Antonucci" — hidden until the cover scrolls away */
+    .nav-title {
+      font-family:    var(--ff-display);
+      font-weight:    600;
+      font-size:      0.95rem;
+      letter-spacing: -0.01em;
+      color:          var(--text);
+      opacity:        0;
+      transform:      translateY(7px);
+      transition:     opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+      white-space:    nowrap;
+    }
+
+    .nav-links {
+      display:     flex;
+      gap:         1.35rem;
+      align-items: center;
+      margin-left: auto;
+    }
+    .nav-links a {
+      font-family:    var(--ff-body);
+      font-weight:    500;
+      font-size:      0.78rem;
+      letter-spacing: 0;
+      color:          var(--muted);
+      text-decoration: none;
+      transition:     color 0.15s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* Scrollspy — underline marker under the nav link of the section in view */
+    .nav-links a { position: relative; }
+    .nav-links a::before {
+      content:          "";
+      position:         absolute;
+      left:             0;
+      right:            0;
+      bottom:           -5px;
+      height:           1.5px;
+      border-radius:    1px;
+      background:       var(--text);
+      transform:        scaleX(0);
+      transform-origin: center;
+      transition:       transform 0.25s ease;
+    }
+    .nav-links a.is-active { color: var(--text); }
+    .nav-links a.is-active::before { transform: scaleX(1); }
+
+    /* Notification dot — signals news on a nav item (PocketChop is on the App Store) */
+    .nav-links a.has-dot { position: relative; }
+    .nav-links a.has-dot::after {
+      content:       "";
+      position:      absolute;
+      top:           -3px;
+      right:         -8px;
+      width:         5px;
+      height:        5px;
+      border-radius: 50%;
+      background:    var(--pc);
+    }
+
+    .theme-toggle {
+      font-family:    var(--ff-body);
+      font-weight:    500;
+      font-size:      0.72rem;
+      color:          var(--text);
+      background:     transparent;
+      border:         0.5px solid var(--rule);
+      border-radius:  6px;
+      padding:        0.3rem 0.65rem;
+      cursor:         pointer;
+      transition:     background 0.15s;
+    }
+    .theme-toggle:hover { background: var(--hover-surface); }
+
+    .nav-lang { display: flex; gap: 0.55rem; align-items: center; }
+    .nav-lang a {
+      font-family:    var(--ff-body);
+      font-weight:    500;
+      font-size:      0.72rem;
+      color:          var(--muted);
+      text-decoration: none;
+      transition:     color 0.15s;
+    }
+    .nav-lang a:hover  { color: var(--text); }
+    .nav-lang a.active { color: var(--text); border-bottom: 1.5px solid var(--accent); }
+
+    #navbar.hero-pinned .nav-brand {
+      opacity:        0;
+      transform:      translateX(-10px);
+      pointer-events: none;
+    }
+    #navbar.hero-pinned .nav-title {
+      opacity:        1;
+      transform:      translateY(0);
+      pointer-events: auto;
+    }
+
+    /* ─────────────────────────────────────────
+       COVER IMAGE
+    ───────────────────────────────────────── */
+    #cover-gallery { width: 100%; }
+    .cover-image {
+      display: block;
+      width:   100%;
+      height:  auto;
+    }
+    .cover-light { display: none;  }
+    .cover-dark  { display: block; }
+    [data-theme="light"] .cover-light { display: block; }
+    [data-theme="light"] .cover-dark  { display: none;  }
+
+    /* ─────────────────────────────────────────
+       PAGE SHELL — everything sits in a centred
+       column like a macOS content view.
+    ───────────────────────────────────────── */
+    .shell {
+      max-width: 1120px;
+      margin:    0 auto;
+      padding:   0 2rem;
+    }
+
+    /* ─────────────────────────────────────────
+       HERO
+    ───────────────────────────────────────── */
+    #hero { padding: 4.5rem 0 4rem; }
+    .hero-content {
+      display:  grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap:      3rem;
+      align-items: end;
+    }
+    .hero-title {
+      font-family:    var(--ff-display);
+      font-weight:    800;
+      font-size:      clamp(2.8rem, 7vw, 5.2rem);
+      line-height:    1.02;
+      letter-spacing: -0.025em;
+    }
+    .hero-domains {
+      display:    flex;
+      gap:        0.45rem;
+      margin-top: 1.4rem;
+      flex-wrap:  wrap;
+    }
+    .domain-pill {
+      font-family:    var(--ff-body);
+      font-weight:    600;
+      font-size:      0.72rem;
+      letter-spacing: 0.01em;
+      padding:        0.32rem 0.7rem;
+      border:         0.5px solid;
+      border-radius:  7px;
+    }
+    .domain-pill.mat { color: var(--mat); border-color: var(--mat); }
+    .domain-pill.snd { color: var(--snd); border-color: var(--snd); }
+    .domain-pill.cod { color: var(--cod); border-color: var(--cod); }
+
+    .hero-desc {
+      font-size:   clamp(0.95rem, 1.3vw, 1.08rem);
+      line-height: 1.7;
+      color:       var(--muted);
+      max-width:   34rem;
+      margin-bottom: 1.4rem;
+    }
+    .hero-desc strong { color: var(--text); font-weight: 600; }
+
+    .hero-location {
+      font-family:    var(--ff-body);
+      font-weight:    500;
+      font-size:      0.78rem;
+      color:          var(--muted);
+      display:        flex;
+      align-items:    center;
+      gap:            0.5rem;
+      margin-bottom:  1.2rem;
+    }
+    .hero-location::before {
+      content:   "●";
+      color:     var(--mat);
+      font-size: 0.55rem;
+    }
+
+    /* Small SSC ribbon linking straight to PocketChop */
+    .hero-award {
+      display:        inline-flex;
+      align-items:    center;
+      gap:            0.5rem;
+      font-family:    var(--ff-body);
+      font-weight:    600;
+      font-size:      0.78rem;
+      color:          var(--pc);
+      text-decoration: none;
+      border:         0.5px solid var(--pc);
+      border-radius:  8px;
+      padding:        0.45rem 0.85rem;
+      transition:     background 0.15s, color 0.15s;
+    }
+    .hero-award:hover { background: var(--pc); color: #fff; }
+
+    /* ─────────────────────────────────────────
+       SECTION SHARED STYLES
+    ───────────────────────────────────────── */
+    section.content-section { padding: 4.5rem 0; border-top: 0.5px solid var(--rule); }
+
+    .eyebrow {
+      font-family:    var(--ff-mono);
+      font-size:      0.72rem;
+      font-weight:    500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color:          var(--muted);
+      margin-bottom:  1rem;
+    }
+    .section-h {
+      font-family:    var(--ff-display);
+      font-weight:    700;
+      font-size:      clamp(1.9rem, 4.2vw, 3rem);
+      letter-spacing: -0.02em;
+      line-height:    1.08;
+      margin-bottom:  1rem;
+    }
+    .section-sub {
+      font-size:   0.98rem;
+      line-height: 1.7;
+      color:       var(--muted);
+      max-width:   40rem;
+      margin-bottom: 3rem;
+    }
+    .section-sub strong { color: var(--text); font-weight: 600; }
+
+    /* ─────────────────────────────────────────
+       JOURNEY — one continuous timeline that
+       merges creative background with life &
+       education, in chronological order.
+       Left rail: hairline + coloured dots.
+    ───────────────────────────────────────── */
+    .tl-stack {
+      max-width: 46rem;
+    }
+
+    /* progress dots — one per step, click to jump straight there */
+    .tl-progress {
+      display:       flex;
+      flex-wrap:     wrap;
+      gap:           0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .tl-dot-btn {
+      width:         11px;
+      height:        11px;
+      padding:       0;
+      border:        none;
+      border-radius: 50%;
+      background:    var(--muted);
+      opacity:       0.35;
+      cursor:        pointer;
+      transition:    opacity 0.15s, transform 0.15s;
+    }
+    .tl-dot-btn.mat { background: var(--mat); }
+    .tl-dot-btn.snd { background: var(--snd); }
+    .tl-dot-btn.cod { background: var(--cod); }
+    .tl-dot-btn.pc  { background: var(--pc);  }
+    .tl-dot-btn:hover     { opacity: 0.75; }
+    .tl-dot-btn.is-seen   { opacity: 0.7; }
+    .tl-dot-btn.is-active { opacity: 1; transform: scale(1.4); }
+
+    /* deck — cards stack absolutely inside; height tracks the top card */
+    .tl-deck {
+      position:   relative;
+      transition: height 0.35s cubic-bezier(.4,0,.2,1);
+    }
+    .tl-deck:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+
+    /* card — Sequoia window-ish: hairline, 10px radius, soft shadow */
+    .tl-card-stacked {
+      position:      absolute;
+      top:           0;
+      left:          0;
+      right:         0;
+      background:    var(--surface);
+      border:        0.5px solid var(--rule);
+      border-radius: var(--radius);
+      box-shadow:    var(--shadow-card);
+      padding:       1.35rem 1.5rem 1.3rem;
+      cursor:        pointer;
+      transition:    transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.35s, background 0.15s;
+    }
+    .tl-card-stacked.is-current {
+      position:  relative;
+      transform: none;
+      opacity:   1;
+      z-index:   10;
+    }
+    .tl-card-stacked.is-current:hover { background: var(--surface-2); }
+    .tl-deck.at-end .tl-card-stacked.is-current { cursor: default; }
+
+    .tl-card-stacked.is-peek-1 { transform: translateY(10px) scale(0.97) rotate(-1deg);   opacity: 1;    z-index: 9; pointer-events: none; }
+    .tl-card-stacked.is-peek-2 { transform: translateY(18px) scale(0.94) rotate(1.4deg);  opacity: 0.85; z-index: 8; pointer-events: none; }
+    .tl-card-stacked.is-peek-3 { transform: translateY(25px) scale(0.91) rotate(-1.8deg); opacity: 0.6;  z-index: 7; pointer-events: none; }
+    .tl-card-stacked.is-hidden { transform: translateY(30px) scale(0.9);                  opacity: 0;    z-index: 1; pointer-events: none; }
+    .tl-card-stacked.is-prev   { transform: translateX(-115%) rotate(-6deg);              opacity: 0;    z-index: 11; pointer-events: none; }
+
+    /* prev/next + counter, under the deck */
+    .tl-controls {
+      position:    relative;
+      z-index:     20;
+      display:     flex;
+      align-items: center;
+      gap:         1rem;
+      margin-top:  1.6rem;
+    }
+    .tl-nav-btn {
+      width:          2.25rem;
+      height:         2.25rem;
+      border-radius:  50%;
+      border:         0.5px solid var(--rule);
+      background:     var(--surface);
+      color:          var(--text);
+      font-size:      1.1rem;
+      line-height:    1;
+      display:        flex;
+      align-items:    center;
+      justify-content: center;
+      cursor:         pointer;
+      transition:     background 0.15s, opacity 0.15s;
+    }
+    .tl-nav-btn:hover:not(:disabled) { background: var(--surface-2); }
+    .tl-nav-btn:disabled { opacity: 0.35; cursor: default; }
+    .tl-counter {
+      font-family:    var(--ff-mono);
+      font-size:      0.75rem;
+      letter-spacing: 0.05em;
+      color:          var(--muted);
+      min-width:      3.2rem;
+    }
+    .tl-hint {
+      font-size: 0.8rem;
+      color:     var(--muted);
+    }
+
+    .tl-when {
+      font-family:    var(--ff-mono);
+      font-size:      0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color:          var(--muted);
+      margin-bottom:  0.45rem;
+    }
+    .tl-title {
+      font-family:    var(--ff-display);
+      font-weight:    700;
+      font-size:      1.25rem;
+      letter-spacing: -0.015em;
+      margin-bottom:  0.5rem;
+    }
+    .tl-text {
+      font-size:   0.9rem;
+      line-height: 1.7;
+      color:       var(--muted);
+      max-width:   46rem;
+    }
+    .tl-text strong { color: var(--text); font-weight: 600; }
+    .tl-text a { color: var(--accent); text-decoration: none; }
+    .tl-text a:hover { text-decoration: underline; }
+
+    /* compact variant for short life moments */
+    .tl-card-stacked--minor { padding: 1rem 1.5rem 0.95rem; }
+    .tl-card-stacked--minor .tl-title { font-size: 1.05rem; }
+
+    .tl-tags {
+      display:    flex;
+      flex-wrap:  wrap;
+      gap:        0.35rem;
+      margin-top: 0.9rem;
+    }
+    .tl-tag {
+      font-family:    var(--ff-body);
+      font-weight:    500;
+      font-size:      0.7rem;
+      padding:        0.24rem 0.6rem;
+      border:         0.5px solid var(--rule);
+      border-radius:  6px;
+      color:          var(--muted);
+    }
+
+    /* Cert/award badge row — bottom-right of a card, tooltip on hover/tap */
+    .tl-badges {
+      position:    absolute;
+      bottom:      0.9rem;
+      right:       1rem;
+      display:     flex;
+      gap:         0.5rem;
+      align-items: center;
+    }
+    .life-cert-badge {
+      position:       relative;
+      font-size:      1rem;
+      cursor:         pointer;
+      line-height:    1;
+      padding:        0.5rem;
+      margin:         -0.5rem;
+      touch-action:   manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .life-cert-badge::after {
+      content:        attr(data-tooltip);
+      position:       absolute;
+      bottom:         calc(100% + 6px);
+      right:          0;
+      white-space:    nowrap;
+      font-family:    var(--ff-body);
+      font-weight:    500;
+      font-size:      0.68rem;
+      color:          var(--text);
+      background:     var(--surface-2);
+      border:         0.5px solid var(--rule);
+      border-radius:  7px;
+      box-shadow:     var(--shadow-card);
+      padding:        0.3rem 0.6rem;
+      opacity:        0;
+      pointer-events: none;
+      transition:     opacity 0.2s;
+      z-index:        5;
+    }
+    .life-cert-badge:hover::after  { opacity: 1; }
+    .life-cert-badge.active::after { opacity: 1; }
+
+    /* ─────────────────────────────────────────
+       FIELDS — where the story lands today.
+       Four skill-field cards closing the journey.
+    ───────────────────────────────────────── */
+    .fields-head {
+      font-family:    var(--ff-display);
+      font-weight:    700;
+      font-size:      1.4rem;
+      letter-spacing: -0.015em;
+      margin:         3.2rem 0 0.4rem;
+    }
+    .fields-sub {
+      font-size:     0.9rem;
+      color:         var(--muted);
+      margin-bottom: 1.5rem;
+    }
+    .fields-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap:     1rem;
+    }
+    .field-card {
+      background:    var(--surface);
+      border:        0.5px solid var(--rule);
+      border-radius: var(--radius);
+      box-shadow:    var(--shadow-card);
+      padding:       1.3rem 1.4rem;
+      border-top:    3px solid var(--rule);
+    }
+    .field-card.mat { border-top-color: var(--mat); }
+    .field-card.snd { border-top-color: var(--snd); }
+    .field-card.cod { border-top-color: var(--cod); }
+    .field-card.vis { border-top-color: var(--accent); }
+
+    .field-title {
+      font-family:    var(--ff-display);
+      font-weight:    700;
+      font-size:      1rem;
+      letter-spacing: -0.01em;
+      margin-bottom:  0.7rem;
+    }
+    .field-list {
+      font-size:   0.82rem;
+      line-height: 1.75;
+      color:       var(--muted);
+    }
+    .langs-note {
+      margin-top:  1.5rem;
+      font-size:   0.82rem;
+      color:       var(--muted);
+    }
+    .langs-note b { color: var(--text); font-weight: 600; }
+
+    /* ─────────────────────────────────────────
+       POCKETCHOP — featured app, presented
+       inside a macOS window frame so it reads
+       like a product page. Shareable anchor.
+    ───────────────────────────────────────── */
+    #pocketchop { padding: 4.5rem 0; border-top: 0.5px solid var(--rule); }
+
+    .pc-window {
+      background:    var(--surface);
+      border:        0.5px solid var(--rule);
+      border-radius: 12px;
+      box-shadow:    var(--shadow-window);
+      overflow:      hidden;
+    }
+    /* titlebar with traffic lights */
+    .pc-titlebar {
+      display:       flex;
+      align-items:   center;
+      gap:           0.75rem;
+      padding:       0.7rem 1.1rem;
+      background:    var(--surface-2);
+      border-bottom: 0.5px solid var(--rule);
+    }
+    .pc-lights { display: flex; gap: 7px; }
+    .pc-light  { width: 12px; height: 12px; border-radius: 50%; }
+    .pc-light--r { background: #FF5F57; }
+    .pc-light--y { background: #FEBC2E; }
+    .pc-light--g { background: #28C840; }
+    .pc-window-title {
+      flex:           1;
+      text-align:     center;
+      font-family:    var(--ff-body);
+      font-weight:    600;
+      font-size:      0.78rem;
+      color:          var(--muted);
+      /* offset the traffic-light width so the title is optically centred */
+      margin-right:   calc(12px * 3 + 14px);
+    }
+
+    .pc-body { padding: 2.5rem; }
+
+    .featured-badge {
+      display:        inline-block;
+      font-family:    var(--ff-body);
+      font-weight:    600;
+      font-size:      0.75rem;
+      padding:        0.34rem 0.8rem;
+      border:         0.5px solid var(--pc);
+      border-radius:  8px;
+      color:          var(--pc);
+      margin-bottom:  1.8rem;
+    }
+    .featured-layout {
+      display:     grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap:         3.5rem;
+      align-items: start;
+    }
+    .pc-icon {
+      width:         84px;
+      height:        84px;
+      border-radius: 19px;
+      display:       block;
+      margin-bottom: 1.5rem;
+      box-shadow:    var(--shadow-card);
+    }
+    .featured-title {
+      font-family:    var(--ff-display);
+      font-weight:    800;
+      font-size:      clamp(2.4rem, 5.5vw, 4rem);
+      line-height:    1.0;
+      letter-spacing: -0.025em;
+      margin-bottom:  1.2rem;
+    }
+    .featured-title em { font-style: normal; color: var(--pc); }
+
+    .featured-tagline {
+      font-size:     clamp(1rem, 1.5vw, 1.12rem);
+      line-height:   1.65;
+      color:         var(--muted);
+      margin-bottom: 1.8rem;
+      border-left:   2px solid var(--pc);
+      padding-left:  1.1rem;
+    }
+    .featured-meta { display: flex; flex-direction: column; gap: 0.45rem; }
+    .featured-meta-item {
+      display:     flex;
+      gap:         1rem;
+      font-size:   0.8rem;
+      border-top:  0.5px solid var(--rule);
+      padding-top: 0.45rem;
+    }
+    .featured-meta-key {
+      color:          var(--muted);
+      min-width:      84px;
+      font-weight:    600;
+      font-size:      0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding-top:    0.1rem;
+    }
+    .featured-meta-val { color: var(--text); }
+    .featured-meta-val a {
+      color: var(--pc);
+      text-decoration: none;
+    }
+    .featured-meta-val a:hover { text-decoration: underline; }
+
+    .featured-section { margin-bottom: 2.2rem; }
+    .featured-section-label {
+      font-family:    var(--ff-body);
+      font-weight:    600;
+      font-size:      0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color:          var(--pc);
+      margin-bottom:  0.6rem;
+    }
+    .featured-section-text {
+      font-size:   0.93rem;
+      line-height: 1.75;
+      color:       var(--muted);
+    }
+    .featured-section-text strong { color: var(--text); font-weight: 600; }
+
+    /* CTA row — filled primary, bordered secondaries */
+    .pc-cta-row {
+      display:   flex;
+      flex-wrap: wrap;
+      gap:       0.6rem;
+      margin-top: 2rem;
+    }
+    .pc-btn {
+      display:        inline-block;
+      font-family:    var(--ff-body);
+      font-weight:    600;
+      font-size:      0.8rem;
+      text-decoration: none;
+      border-radius:  8px;
+      padding:        0.55rem 1.1rem;
+      border:         0.5px solid var(--pc);
+      color:          var(--pc);
+      background:     transparent;
+      cursor:         pointer;
+      transition:     background 0.15s, color 0.15s, opacity 0.15s;
+    }
+    .pc-btn:hover { background: var(--pc); color: #fff; }
+    .pc-btn--primary {
+      background: var(--pc);
+      color:      #fff;
+    }
+    .pc-btn--primary:hover { opacity: 0.85; }
+    .pc-btn--soon {
+      color:        var(--muted);
+      border-color: var(--rule);
+      opacity:      0.7;
+      cursor:       default;
+    }
+    .pc-btn--soon:hover { background: transparent; color: var(--muted); }
+    .pc-btn--ghost {
+      color:        var(--text);
+      border-color: var(--rule);
+    }
+    .pc-btn--ghost:hover { background: var(--hover-surface); color: var(--text); }
+
+    /* ─────────────────────────────────────────
+       ACADEMY APPS — responsive card grid.
+    ───────────────────────────────────────── */
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap:     1rem;
+    }
+    .app-card {
+      background:    var(--surface);
+      border:        0.5px solid var(--rule);
+      border-radius: var(--radius);
+      box-shadow:    var(--shadow-card);
+      padding:       1.5rem 1.4rem;
+      min-height:    250px;
+      display:       flex;
+      flex-direction: column;
+      transition:    background 0.15s;
+    }
+    .app-card:hover { background: var(--surface-2); }
+
+    .app-icon {
+      width:         64px;
+      height:        64px;
+      border-radius: 14px;
+      margin-bottom: 1.2rem;
+      display:       block;
+      flex-shrink:   0;
+      overflow:      hidden;
+    }
+    /* Theme-aware icons: dark variant by default, light variant in light theme */
+    .app-icon .app-icon--light { display: none; }
+    [data-theme="light"] .app-icon .app-icon--dark  { display: none; }
+    [data-theme="light"] .app-icon .app-icon--light { display: block; }
+    .app-icon--placeholder {
+      background: linear-gradient(145deg, #555 0%, #e8e8e8 100%);
+    }
+    [data-theme="light"] .app-icon--placeholder {
+      background: linear-gradient(145deg, #aaa 0%, #111 100%);
+    }
+    .app-name {
+      font-family:    var(--ff-display);
+      font-weight:    700;
+      font-size:      1.05rem;
+      letter-spacing: -0.01em;
+      margin-bottom:  0.5rem;
+    }
+    .app-bottom { margin-top: auto; }
+    .app-desc {
+      font-size:     0.82rem;
+      line-height:   1.65;
+      color:         var(--muted);
+      margin-bottom: 0.9rem;
+    }
+    .app-links {
+      display:   flex;
+      gap:       0.4rem;
+      flex-wrap: wrap;
+    }
+    .app-link {
+      font-family:     var(--ff-body);
+      font-weight:     600;
+      font-size:       0.68rem;
+      text-decoration: none;
+      border:          0.5px solid;
+      border-radius:   6px;
+      padding:         0.24rem 0.6rem;
+      transition:      background 0.15s, color 0.15s;
+    }
+    .app-link--gh    { color: var(--text); border-color: var(--rule); }
+    .app-link--gh:hover { background: var(--hover-surface); }
+    .app-link--tf    { color: var(--cod); border-color: var(--cod); }
+    .app-link--tf:hover { background: var(--cod); color: var(--bg); }
+    .app-link--store { color: var(--mat); border-color: var(--mat); }
+    .app-link--store:hover { background: var(--mat); color: var(--bg); }
+    .app-link--disabled {
+      color:          var(--muted);
+      border-color:   var(--rule);
+      opacity:        0.35;
+      pointer-events: none;
+    }
+
+    /* ─────────────────────────────────────────
+       RELEASES — Spotify embeds, horizontal scroll
+    ───────────────────────────────────────── */
+    .hscroll-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--rule) transparent;
+      padding-bottom: 1rem;
+      margin: 0 -2rem;   /* let the track bleed to the shell edges */
+    }
+    .hscroll-wrap::-webkit-scrollbar       { height: 2px; }
+    .hscroll-wrap::-webkit-scrollbar-track { background: transparent; }
+    .hscroll-wrap::-webkit-scrollbar-thumb { background: var(--rule); }
+
+    .hscroll-track {
+      display: flex;
+      width:   max-content;
+      padding: 0 2rem;
+    }
+    .release-card {
+      width:        clamp(260px, 26vw, 300px);
+      flex-shrink:  0;
+      margin-right: 1.25rem;
+    }
+    .release-card:last-child { margin-right: 0; }
+    .release-card iframe {
+      display:       block;
+      width:         100%;
+      height:        352px !important; /* lock box — Spotify JS auto-resizes track embeds otherwise */
+      border:        0;
+      border-radius: 12px;
+    }
+
+    /* ─────────────────────────────────────────
+       CONTACT
+    ───────────────────────────────────────── */
+    .contact-cta {
+      font-family:    var(--ff-display);
+      font-weight:    800;
+      font-size:      clamp(2.2rem, 6vw, 4.5rem);
+      letter-spacing: -0.025em;
+      line-height:    1.02;
+      margin-bottom:  3rem;
+    }
+    .contact-links-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap:     1rem;
+    }
+    .contact-link-block {
+      background:    var(--surface);
+      border:        0.5px solid var(--rule);
+      border-radius: var(--radius);
+      box-shadow:    var(--shadow-card);
+      padding:       1.4rem 1.5rem;
+      text-decoration: none;
+      color:         var(--text);
+      display:       block;
+      transition:    background 0.15s;
+    }
+    .contact-link-block:hover { background: var(--surface-2); }
+
+    .contact-link-label {
+      font-family:    var(--ff-body);
+      font-weight:    600;
+      font-size:      0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color:          var(--muted);
+      margin-bottom:  0.4rem;
+      display:        block;
+    }
+    .contact-link-val {
+      font-size:  0.82rem;
+      word-break: break-word;
+    }
+    .contact-link-icon {
+      display:       block;
+      color:         var(--muted);
+      margin-bottom: 1rem;
+      transition:    color 0.15s;
+    }
+    .contact-link-icon svg { width: 22px; height: 22px; display: block; }
+    .contact-link-block:hover .contact-link-icon { color: var(--text); }
+
+    /* ─────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────── */
+    footer {
+      border-top: 0.5px solid var(--rule);
+      padding:    1.5rem 2rem;
+      display:    flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap:  wrap;
+      gap:        1rem;
+      max-width:  1120px;
+      margin:     0 auto;
+    }
+    .footer-left,
+    .footer-time {
+      font-family: var(--ff-body);
+      font-weight: 500;
+      font-size:   0.7rem;
+      color:       var(--muted);
+    }
+
+    /* ─────────────────────────────────────────
+       SCROLL REVEAL
+    ───────────────────────────────────────── */
+    .reveal {
+      opacity:    0;
+      transform:  translateY(16px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.in {
+      opacity:   1;
+      transform: none;
+    }
+
+    /* ─────────────────────────────────────────
+       REDUCED MOTION
+    ───────────────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1 !important; transform: none !important; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE — MOBILE  (≤768px)
+    ───────────────────────────────────────── */
+    @media (max-width: 768px) {
+      #navbar      { padding: calc(0.6rem + env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 0.6rem max(1rem, env(safe-area-inset-left)); }
+      .nav-links a { display: none; }
+      .nav-lang a  { display: inline; }
+
+      .shell { padding: 0 1.15rem; }
+
+      #hero { padding: 2.5rem 0 3rem; }
+      .hero-content { grid-template-columns: 1fr; gap: 2rem; }
+
+      section.content-section, #pocketchop { padding: 3rem 0; }
+
+      .tl-card-stacked.is-peek-1 { transform: translateY(7px)  scale(0.97) rotate(-0.8deg); }
+      .tl-card-stacked.is-peek-2 { transform: translateY(12px) scale(0.94) rotate(1deg);    }
+      .tl-card-stacked.is-peek-3 { transform: translateY(16px) scale(0.91) rotate(-1.2deg); }
+      .tl-hint { display: none; }
+
+      .pc-body { padding: 1.5rem 1.25rem; }
+      .featured-layout { grid-template-columns: 1fr; gap: 2.2rem; }
+
+      .hscroll-wrap  { margin: 0 -1.15rem; }
+      .hscroll-track { padding: 0 1.15rem; }
+    }
+
+  </style>
+
+  <!-- Fallback: if JS is disabled, reveal-animated content must still show -->
+  <noscript><style>.reveal{opacity:1 !important;transform:none !important;}</style></noscript>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════
+       NAVBAR
+       Frosted toolbar. Logo + HART on load;
+       swaps to "Fabio Antonucci" after the
+       cover image scrolls out of view.
+  ═══════════════════════════════════════ -->
+  <nav id="navbar" aria-label="Site navigation">
+
+    <div class="nav-brand">
+      <img class="nav-logo nav-logo--dark"  src="Resources/hartTee_dark.png"  alt="HART logo" width="28" height="28" decoding="async">
+      <img class="nav-logo nav-logo--light" src="Resources/hartTee_light.png" alt="HART logo" width="28" height="28" decoding="async" loading="lazy">
+      <span class="nav-wordmark">HART</span>
+    </div>
+
+    <span class="nav-title" aria-hidden="true">Fabio Antonucci</span>
+
+    <div class="nav-links">
+      <a href="#journey">Journey</a>
+      <a href="#pocketchop" class="has-dot">PocketChop</a>
+      <a href="#projects">Apps</a>
+      <a href="#music">Music</a>
+      <a href="#contact">Contact</a>
+      <span class="nav-lang" aria-label="Language">
+        <a href="index.html" class="active">EN</a>
+        <a href="index-it.html">IT</a>
+        <a href="index-es.html">ES</a>
+      </span>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark theme">Light</button>
+    </div>
+
+  </nav>
+
+
+  <!-- ═══════════════════════════════════════
+       COVER IMAGE
+  ═══════════════════════════════════════ -->
+  <section id="cover-gallery" aria-label="Cover artwork">
+    <img src="Resources/artworkLight.png" class="cover-image cover-light" alt="Artwork — light version" decoding="async" loading="lazy">
+    <img src="Resources/artworkDark.png"  class="cover-image cover-dark"  alt="Artwork — dark version" decoding="async" fetchpriority="high">
+  </section>
+
+
+  <div class="shell">
+
+  <!-- ═══════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════ -->
+  <section id="hero" aria-label="Introduction">
+    <div class="hero-content reveal">
+
+      <div class="hero-left">
+        <h1 class="hero-title">Fabio<br>Antonucci</h1>
+        <div class="hero-domains">
+          <span class="domain-pill mat">Materials Eng.</span>
+          <span class="domain-pill snd">Music &amp; Sound</span>
+          <span class="domain-pill cod">iOS / Code</span>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <p class="hero-desc">
+          Master's student in <strong>Materials Engineering</strong> at Federico II.
+          <strong>Electronic music producer.</strong>
+          <strong>Apple Developer Academy</strong> alumnus and Swift Student Challenge 2026 winner.
+        </p>
+        <div class="hero-location">Napoli, Italy</div>
+        <a class="hero-award" href="https://apps.apple.com/it/app/pocketchop/id6770474050?l=en-GB" target="_blank" rel="noopener">PocketChop — Available on the App Store ↗</a>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       JOURNEY
+       Life & education and creative background,
+       merged into one chronological thread.
+       Ends with the fields all of it adds up to.
+  ═══════════════════════════════════════ -->
+  <section id="journey" class="content-section">
+
+    <div class="reveal">
+      <p class="eyebrow">2001 → Today · Napoli</p>
+      <h2 class="section-h">About me.</h2>
+      <p class="section-sub">Engineering, design, sound, and code — always driven by curiosity. Here it is, <strong>in the order it actually happened</strong>.</p>
+    </div>
+
+    <div class="tl-stack reveal">
+
+      <div class="tl-progress" role="tablist" aria-label="Timeline steps">
+        <button type="button" class="tl-dot-btn is-active" data-index="0"  role="tab" aria-selected="true"  aria-label="1. Napoli"></button>
+        <button type="button" class="tl-dot-btn"            data-index="1"  role="tab" aria-selected="false" aria-label="2. Design &amp; Drawing"></button>
+        <button type="button" class="tl-dot-btn cod"         data-index="2"  role="tab" aria-selected="false" aria-label="3. First Computer"></button>
+        <button type="button" class="tl-dot-btn snd"         data-index="3"  role="tab" aria-selected="false" aria-label="4. First Beats — Music Production"></button>
+        <button type="button" class="tl-dot-btn mat"         data-index="4"  role="tab" aria-selected="false" aria-label="5. Liceo Scientifico"></button>
+        <button type="button" class="tl-dot-btn"            data-index="5"  role="tab" aria-selected="false" aria-label="6. Birmingham"></button>
+        <button type="button" class="tl-dot-btn mat"         data-index="6"  role="tab" aria-selected="false" aria-label="7. Materials Engineering — BSc"></button>
+        <button type="button" class="tl-dot-btn snd"         data-index="7"  role="tab" aria-selected="false" aria-label="8. Audio-Visual"></button>
+        <button type="button" class="tl-dot-btn snd"         data-index="8"  role="tab" aria-selected="false" aria-label="9. Vesuvius Soul Records"></button>
+        <button type="button" class="tl-dot-btn snd"         data-index="9"  role="tab" aria-selected="false" aria-label="10. Sound Technician — EQF 4"></button>
+        <button type="button" class="tl-dot-btn mat"         data-index="10" role="tab" aria-selected="false" aria-label="11. Materials Engineering — MSc"></button>
+        <button type="button" class="tl-dot-btn cod"         data-index="11" role="tab" aria-selected="false" aria-label="12. Apple Developer Academy"></button>
+        <button type="button" class="tl-dot-btn pc"          data-index="12" role="tab" aria-selected="false" aria-label="13. Swift Student Challenge — Winner"></button>
+      </div>
+
+      <div class="tl-deck" tabindex="0" role="group" aria-label="About-me timeline, click the card to advance" aria-live="polite">
+
+        <!-- 2001 · Napoli -->
+        <article class="tl-card-stacked tl-card-stacked--minor is-current" data-index="0">
+          <div class="tl-when">May 2001</div>
+          <h3 class="tl-title">Napoli</h3>
+          <p class="tl-text">Born in Naples — a city where noise, beauty, and improvisation are part of the curriculum.</p>
+        </article>
+
+        <!-- Childhood · drawing -->
+        <article class="tl-card-stacked" data-index="1">
+          <div class="tl-when">Early years</div>
+          <h3 class="tl-title">Design &amp; Drawing</h3>
+          <p class="tl-text">I started drawing as a child. Over time, it became a habit — I sketch constantly, and some sketches grow into something more. It's still where every project of mine begins.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">Visual Thinking</span>
+            <span class="tl-tag">UI Sensitivity</span>
+            <span class="tl-tag">Graphic Design</span>
+          </div>
+        </article>
+
+        <!-- Childhood · first computer -->
+        <article class="tl-card-stacked" data-index="2">
+          <div class="tl-when">The first machine</div>
+          <h3 class="tl-title">First Computer</h3>
+          <p class="tl-text">A gift from my father: an eMachines portable notebook. I tweaked a lot with it — had to break it multiple times before understanding how <em>not</em> to break it. That loop of breaking and fixing never really stopped.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">Self-Taught</span>
+            <span class="tl-tag">Curiosity</span>
+            <span class="tl-tag">Tech Exploration</span>
+          </div>
+        </article>
+
+        <!-- 2014 · music production begins -->
+        <article class="tl-card-stacked" data-index="3">
+          <div class="tl-when">2014 — Present</div>
+          <h3 class="tl-title">First Beats — Music Production</h3>
+          <p class="tl-text">At 14 I opened a DAW for the first time and never closed it. Self-taught producer: composition, sound design, mixing, mastering — <strong>a decade of ear training</strong>, released as <strong>Hart</strong>.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">Ableton Live</span>
+            <span class="tl-tag">Logic Pro</span>
+            <span class="tl-tag">FL Studio</span>
+            <span class="tl-tag">Pro Tools</span>
+          </div>
+        </article>
+
+        <!-- 2014–2019 · liceo -->
+        <article class="tl-card-stacked" data-index="4">
+          <div class="tl-when">2014 — 2019</div>
+          <h3 class="tl-title">Liceo Scientifico</h3>
+          <p class="tl-text">Five years of maths, physics, latin, and existential dread at Liceo Tito Lucrezio Caro, Napoli. Where the scientific method became a reflex.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">Mathematics</span>
+            <span class="tl-tag">Scientific Method</span>
+          </div>
+          <div class="tl-badges">
+            <span class="life-cert-badge" data-tooltip="1st place — Giochi d'Autunno, Mathematics (2015)">🏅</span>
+            <span class="life-cert-badge" data-tooltip="99/100 — almost...">📋</span>
+          </div>
+        </article>
+
+        <!-- 2018 · Birmingham -->
+        <article class="tl-card-stacked" data-index="5">
+          <div class="tl-when">Summer 2018</div>
+          <h3 class="tl-title">Birmingham</h3>
+          <p class="tl-text">Awarded a two-week EU-funded English programme at Bournville College, Birmingham — just before Brexit changed the rules. Came back with sharper English and a taste for working across cultures; certified <strong>Cambridge C1</strong> the year after.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">English</span>
+            <span class="tl-tag">Cultural Exchange</span>
+          </div>
+          <div class="tl-badges">
+            <span class="life-cert-badge" data-tooltip="C1 English Cambridge Certification (2019)">🎖️</span>
+          </div>
+        </article>
+
+        <!-- 2019–2024 · BSc -->
+        <article class="tl-card-stacked" data-index="6">
+          <div class="tl-when">2019 — 2024</div>
+          <h3 class="tl-title">Materials Engineering — BSc</h3>
+          <p class="tl-text">BSc in Materials Science &amp; Engineering at Federico II (101/110). Years of lab work — rheology, spectroscopy, chemical foaming of polyurethanes. Thesis on <strong>sound-absorbing porous materials</strong>: the first time my two worlds officially met.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">Analytical Thinking</span>
+            <span class="tl-tag">Problem Solving</span>
+            <span class="tl-tag">Lab Work</span>
+          </div>
+          <div class="tl-badges">
+            <span class="life-cert-badge" data-tooltip="Laurea triennale in Scienza e Ingegneria dei Materiali, L-9 — 101/110">🎓</span>
+          </div>
+        </article>
+
+        <!-- along the way · audio-visual -->
+        <article class="tl-card-stacked" data-index="7">
+          <div class="tl-when">Along the way</div>
+          <h3 class="tl-title">Audio-Visual</h3>
+          <p class="tl-text">Sound expanded into real-time visual systems via <strong>TouchDesigner</strong>. When audio becomes geometry: performance as a live feedback loop between audio signal and generated imagery.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">TouchDesigner</span>
+            <span class="tl-tag">Generative Visuals</span>
+          </div>
+        </article>
+
+        <!-- 2023 · record shop -->
+        <article class="tl-card-stacked tl-card-stacked--minor" data-index="8">
+          <div class="tl-when">Nov — Dec 2023</div>
+          <h3 class="tl-title">Vesuvius Soul Records</h3>
+          <p class="tl-text">Bar staff at a Naples record shop — pouring drinks between crates of vinyl. Not a career move; absolutely worth it.</p>
+        </article>
+
+        <!-- 2024–2025 · sound technician -->
+        <article class="tl-card-stacked" data-index="9">
+          <div class="tl-when">2024 — 2025</div>
+          <h3 class="tl-title">Sound Technician — EQF 4</h3>
+          <p class="tl-text">Formalised a decade of self-taught audio with a Regione Campania qualification: sound design, signal routing in live audio and AV systems, live mixing, studio recording. Internship at <strong>Teatro TAN</strong>, Naples — hands-on live-audio and stage AV work.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">Live Mixing</span>
+            <span class="tl-tag">Signal Routing</span>
+            <span class="tl-tag">Studio Recording</span>
+          </div>
+          <div class="tl-badges">
+            <span class="life-cert-badge" data-tooltip="EQF 4 Qualification">📜</span>
+          </div>
+        </article>
+
+        <!-- 2024 · MSc -->
+        <article class="tl-card-stacked" data-index="10">
+          <div class="tl-when">Oct 2024 — Present</div>
+          <h3 class="tl-title">Materials Engineering — MSc</h3>
+          <p class="tl-text">Now in the MSc at Federico II, with a personal focus on the intersection of <strong>materials and sound</strong> — acoustics as an engineering problem.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">Acoustics</span>
+            <span class="tl-tag">Materials Science</span>
+          </div>
+        </article>
+
+        <!-- 2025–2026 · Academy -->
+        <article class="tl-card-stacked" data-index="11">
+          <div class="tl-when">Oct 2025 — Jun 2026</div>
+          <h3 class="tl-title">Apple Developer Academy</h3>
+          <p class="tl-text">Full-time programme at Federico II covering app development, design, and innovation. Built <strong><a href="#projects">7 apps</a></strong> across team and solo projects — several with on-device AI (FoundationModels, Vision), shipped to the App Store and TestFlight.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">Swift / SwiftUI</span>
+            <span class="tl-tag">On-device AI</span>
+            <span class="tl-tag">Teamwork</span>
+          </div>
+        </article>
+
+        <!-- 2026 · SSC / PocketChop -->
+        <article class="tl-card-stacked" data-index="12">
+          <div class="tl-when">2026</div>
+          <h3 class="tl-title">Swift Student Challenge — Winner</h3>
+          <p class="tl-text">Everything converged into <strong><a href="#pocketchop">PocketChop</a></strong> — a sample slicer and step sequencer for iPad, built entirely in Swift Playgrounds. The drawing hand, the producer's ear, the engineer's method, all in one app. Apple picked it as a <strong>Swift Student Challenge 2026 winner</strong>.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">WWDC 2026</span>
+            <span class="tl-tag">AudioKit</span>
+            <span class="tl-tag">Swift Playgrounds</span>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="tl-controls">
+        <button type="button" class="tl-nav-btn tl-nav-prev" aria-label="Previous" disabled>‹</button>
+        <span class="tl-counter">1 / 13</span>
+        <button type="button" class="tl-nav-btn tl-nav-next" aria-label="Next">›</button>
+        <span class="tl-hint">Click the card to continue</span>
+      </div>
+
+    </div>
+
+    <!-- Where it all lands: the fields -->
+    <div class="reveal">
+      <h3 class="fields-head">Today — what it all adds up to</h3>
+      <p class="fields-sub">Four fields, one method: understand the material, shape the signal, ship the tool.</p>
+    </div>
+    <div class="fields-grid reveal">
+
+      <div class="field-card mat">
+        <h4 class="field-title">Materials Engineering</h4>
+        <p class="field-list">Materials characterisation · Rheology · Spectroscopy · Chemical foaming · Mechanical testing · ASTM standards · COMSOL · MATLAB · AutoCAD</p>
+      </div>
+
+      <div class="field-card snd">
+        <h4 class="field-title">Sound &amp; Music</h4>
+        <p class="field-list">Ableton Live · Logic Pro · FL Studio · Pro Tools · Sound design · Mix &amp; master · Live mixing · Studio recording</p>
+      </div>
+
+      <div class="field-card cod">
+        <h4 class="field-title">Code &amp; iOS</h4>
+        <p class="field-list">Swift / SwiftUI · UIKit · AVFoundation · AudioKit · Xcode · C++ · Git / GitHub · On-device AI (FoundationModels, Vision)</p>
+      </div>
+
+      <div class="field-card vis">
+        <h4 class="field-title">Design &amp; Visual</h4>
+        <p class="field-list">TouchDesigner · Illustrator · Photoshop · After Effects · Premiere Pro · Blender · Figma · Cover artwork &amp; merch design</p>
+      </div>
+
+    </div>
+    <p class="langs-note reveal"><b>Languages:</b> Italian — native · English — C1, Cambridge Advanced · Spanish — basic</p>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       POCKETCHOP — featured app in a macOS
+       window frame. Shareable at /#pocketchop.
+  ═══════════════════════════════════════ -->
+  <section id="pocketchop" aria-label="Featured Project — PocketChop">
+
+    <div class="pc-window reveal">
+
+      <div class="pc-titlebar" aria-hidden="true">
+        <span class="pc-lights">
+          <span class="pc-light pc-light--r"></span>
+          <span class="pc-light pc-light--y"></span>
+          <span class="pc-light pc-light--g"></span>
+        </span>
+        <span class="pc-window-title">PocketChop — Swift Student Challenge 2026</span>
+      </div>
+
+      <div class="pc-body">
+
+        <span class="featured-badge">★ Swift Student Challenge 2026 — Winner</span>
+
+        <div class="featured-layout">
+
+          <!-- Left: icon, title, metadata -->
+          <div class="featured-left">
+            <img src="Resources/PocketChop/PocketChopICON.png" alt="PocketChop app icon" class="pc-icon" loading="lazy" decoding="async">
+            <h2 class="featured-title">Pocket<em>Chop</em></h2>
+            <p class="featured-tagline">Sample slicer and step sequencer for iPad. Built entirely in Swift Playgrounds.</p>
+            <div class="featured-meta">
+              <div class="featured-meta-item">
+                <span class="featured-meta-key">Platform</span>
+                <span class="featured-meta-val">iPad · iPadOS 18.1+</span>
+              </div>
+              <div class="featured-meta-item">
+                <span class="featured-meta-key">Year</span>
+                <span class="featured-meta-val">2026</span>
+              </div>
+              <div class="featured-meta-item">
+                <span class="featured-meta-key">Award</span>
+                <span class="featured-meta-val"><a href="https://developer.apple.com/swift-student-challenge/" target="_blank" rel="noopener">Swift Student Challenge — WWDC 2026 ↗</a></span>
+              </div>
+              <div class="featured-meta-item">
+                <span class="featured-meta-key">Stack</span>
+                <span class="featured-meta-val">SwiftUI · AVFoundation · UIKit · <a href="https://github.com/audiokit/audiokit" target="_blank" rel="noopener">AudioKit ↗</a></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: what it is + personal context + CTAs -->
+          <div class="featured-right">
+
+            <div class="featured-section">
+              <p class="featured-section-label">What it does</p>
+              <p class="featured-section-text">Import any audio file, slice it into up to 16 named regions, assign each to a pad, and build patterns in a <strong>64-step sequencer</strong>. Includes a piano roll, per-pad FX and ADSR envelopes, and full-mix recording — all offline, no internet required. Design language inspired by teenage engineering hardware.</p>
+            </div>
+
+            <div class="featured-section">
+              <p class="featured-section-label">Why I built it</p>
+              <p class="featured-section-text">I wanted a real production tool that ran entirely on iPad — no laptop, no subscription. PocketChop sits at the centre of the three things I do: <strong>sound, engineering precision, and iOS craftsmanship</strong>.</p>
+            </div>
+
+            <div class="pc-cta-row">
+              <a href="https://apps.apple.com/it/app/pocketchop/id6770474050?l=en-GB" target="_blank" rel="noopener" class="pc-btn pc-btn--primary">Download on the App Store ↗</a>
+              <a href="https://testflight.apple.com/join/cAkjF7JV" target="_blank" rel="noopener" class="pc-btn">Try on TestFlight ↗</a>
+              <a href="https://github.com/haartt/PocketChop-WWDC26" target="_blank" rel="noopener" class="pc-btn">View on GitHub ↗</a>
+              <a href="https://haartt.github.io/PocketChop/" target="_blank" rel="noopener" class="pc-btn">Privacy &amp; Description ↗</a>
+              <button class="pc-btn pc-btn--ghost" id="pc-share" type="button">Share this app</button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       ACADEMY PROJECTS — one card per app.
+  ═══════════════════════════════════════ -->
+  <section id="projects" class="content-section">
+
+    <div class="reveal">
+      <p class="eyebrow">Apple Developer Academy 2025/2026</p>
+      <h2 class="section-h">Seven apps in nine months.</h2>
+      <p class="section-sub">Team and solo projects built at the Academy — several with on-device AI, shipped to the App Store and TestFlight.</p>
+    </div>
+
+    <div class="apps-grid">
+
+      <!-- 1 · Networks -->
+      <div class="app-card reveal">
+        <div class="app-icon app-icon--placeholder"></div>
+        <div class="app-name">Networks</div>
+        <div class="app-bottom">
+          <div class="app-desc">Connect people with shared interests across different locations. Discover communities in your field.</div>
+          <div class="app-links">
+            <span class="app-link app-link--disabled">App Store</span>
+            <span class="app-link app-link--disabled">TestFlight</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 · Compass -->
+      <div class="app-card reveal">
+        <div class="app-icon">
+          <img src="Resources/Academy/2_dark.png"  alt="Compass icon" class="app-icon--dark"  loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">
+          <img src="Resources/Academy/2_light.png" alt="Compass icon" class="app-icon--light" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <div class="app-name">Compass</div>
+        <div class="app-bottom">
+          <div class="app-desc">Daily fortune app powered by FoundationModels — fully local and offline. No server, no tracking.</div>
+          <div class="app-links">
+            <a href="https://github.com/haartt/Quotes" target="_blank" rel="noopener" class="app-link app-link--gh">GitHub ↗</a>
+            <span class="app-link app-link--disabled">TestFlight</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 · Storease -->
+      <div class="app-card reveal">
+        <div class="app-icon">
+          <img src="Resources/Academy/3.png" alt="Storease icon" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <div class="app-name">Storease</div>
+        <div class="app-bottom">
+          <div class="app-desc">Point your camera at a photo — Vision + FoundationModels generate branching story options on device. Memories become narrative.</div>
+          <div class="app-links">
+            <a href="https://github.com/haartt/Storease" target="_blank" rel="noopener" class="app-link app-link--gh">GitHub ↗</a>
+            <a href="https://testflight.apple.com/join/sT3aReAsE" target="_blank" rel="noopener" class="app-link app-link--tf">TestFlight ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 · HeritageExplorer -->
+      <div class="app-card reveal">
+        <div class="app-icon app-icon--placeholder"></div>
+        <div class="app-name">Heritage Explorer</div>
+        <div class="app-bottom">
+          <div class="app-desc">AR experience that layers historical context over your surroundings. Project paused — reach out if you want to continue it.</div>
+          <div class="app-links">
+            <span class="app-link app-link--disabled">App Store</span>
+            <a href="https://testflight.apple.com/join/hErItAgE0" target="_blank" rel="noopener" class="app-link app-link--tf">TestFlight ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 · 2089: The Breaking Point -->
+      <div class="app-card reveal">
+        <div class="app-icon">
+          <img src="Resources/Academy/5.png" alt="2089 icon" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <div class="app-name">2089</div>
+        <div class="app-bottom">
+          <div class="app-desc">Decision-making game set at humanity's breaking point. Three factions, one player — your choices shape the outcome.</div>
+          <div class="app-links">
+            <span class="app-link app-link--disabled">App Store</span>
+            <a href="https://testflight.apple.com/join/2O89bRkPt" target="_blank" rel="noopener" class="app-link app-link--tf">TestFlight ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6 · Zest -->
+      <div class="app-card reveal">
+        <div class="app-icon app-icon--placeholder"></div>
+        <div class="app-name">Zest</div>
+        <div class="app-bottom">
+          <div class="app-desc">Running app that modulates audio playback parameters in real time based on your movement. Motion becomes the instrument.</div>
+          <div class="app-links">
+            <a href="https://github.com/haartt/Zest" target="_blank" rel="noopener" class="app-link app-link--gh">GitHub ↗</a>
+            <span class="app-link app-link--disabled">TestFlight</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7 · Tinto -->
+      <div class="app-card reveal">
+        <div class="app-icon">
+          <img src="Resources/Academy/7.png" alt="Tinto icon" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <div class="app-name">Tinto</div>
+        <div class="app-bottom">
+          <div class="app-desc">Museum companion for kids. Scan any artwork, extract its palette, mix primary colours to unlock each shade.</div>
+          <div class="app-links">
+            <a href="https://github.com/fatima-shekarabi/Tinto-Project" target="_blank" rel="noopener" class="app-link app-link--gh">GitHub ↗</a>
+            <a href="https://apps.apple.com/in/app/tinto-your-museum-buddy/id6777824863" target="_blank" rel="noopener" class="app-link app-link--store">App Store ↗</a>
+            <a href="https://testflight.apple.com/join/9Qy3SEjM" target="_blank" rel="noopener" class="app-link app-link--tf">TestFlight ↗</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       MUSIC — releases as Hart.
+  ═══════════════════════════════════════ -->
+  <section id="music" class="content-section">
+
+    <div class="reveal">
+      <p class="eyebrow">Hart · Production &amp; Artworks</p>
+      <h2 class="section-h">Releases.</h2>
+      <p class="section-sub">A decade of production, released as <strong>Hart</strong> — composition, sound design, mixing, and every cover artwork.</p>
+    </div>
+
+    <div class="hscroll-wrap">
+      <div class="hscroll-track releases-track" role="list">
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/6a1fwt1CKS29SBDwQy16wP?utm_source=generator" title="Dollar — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/0D4wYzpGaY7HM7ytaetimk?utm_source=generator" title="Nitemarez — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/1RoKDwToTQCpQzAMy1i5cs?utm_source=generator" title="Communicate — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/1kJEMtlqnHeY18igP45qjh?utm_source=generator" title="HART — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/3gUyQEIvWkvi42uvtr7YKC?utm_source=generator" title="Sunset Sherbet — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/1S1y4oX3mz7lhiZJFO6Lbb?utm_source=generator" title="Atto II — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/4W6kvnFFseeGNoE53wYz39?utm_source=generator" title="Hell's Doorbell — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/4oE9tuM4ywnvewaFuLW1YN?utm_source=generator" title="Plastic Flowers — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/585ZALNqabTS0KhxNgeAyW?utm_source=generator" title="Soldi &amp; Potere — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/2TCkRAkbMr6P2tdQ5WiOL4?utm_source=generator" title="Spine — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+        <div class="release-card reveal" role="listitem"><iframe loading="lazy" height="352" src="https://open.spotify.com/embed/album/5q1g07oJqtevSBCXYmkf1B?utm_source=generator" title="Communicate (Instrumental Version) — Hart on Spotify" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       CONTACT
+  ═══════════════════════════════════════ -->
+  <section id="contact" class="content-section">
+
+    <div class="reveal">
+      <h2 class="contact-cta">Let's link up!</h2>
+    </div>
+
+    <div class="contact-links-row reveal">
+      <a href="mailto:fabioantonucci6@icloud.com" class="contact-link-block">
+        <span class="contact-link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg></span>
+        <span class="contact-link-label">Email</span>
+        <span class="contact-link-val">fabioantonucci6@icloud.com</span>
+      </a>
+      <a href="https://www.linkedin.com/in/fabio-antonucci-8008522a6/" target="_blank" rel="noopener" class="contact-link-block">
+        <span class="contact-link-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></span>
+        <span class="contact-link-label">LinkedIn</span>
+        <span class="contact-link-val">Fabio Antonucci</span>
+      </a>
+      <a href="https://instagram.com/its.haartt" target="_blank" rel="noopener" class="contact-link-block">
+        <span class="contact-link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span>
+        <span class="contact-link-label">Instagram</span>
+        <span class="contact-link-val">@its.haartt</span>
+      </a>
+      <a href="https://github.com/haartt" target="_blank" rel="noopener" class="contact-link-block">
+        <span class="contact-link-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.42c.58.1.79-.25.79-.56v-2.02c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.76.4-1.27.74-1.56-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.41-5.26 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></span>
+        <span class="contact-link-label">GitHub</span>
+        <span class="contact-link-val">haartt</span>
+      </a>
+    </div>
+
+  </section>
+
+  </div><!-- /.shell -->
+
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+  <footer>
+    <span class="footer-left">© Fabio Antonucci · Napoli · 2026</span>
+    <span class="footer-time" id="footer-time"></span>
+  </footer>
+
+
+  <script>
+    // ─── Theme toggle (Light ↔ Dark) ──────────────────────────────────────
+    const root = document.documentElement;
+    const btn  = document.getElementById('theme-toggle');
+    const saved = localStorage.getItem('fa-theme');
+    if (saved) root.dataset.theme = saved;
+
+    function syncLabel() {
+      btn.textContent = root.dataset.theme === 'light' ? 'Dark' : 'Light';
+    }
+    syncLabel();
+
+    btn.addEventListener('click', () => {
+      const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+      root.dataset.theme = next;
+      localStorage.setItem('fa-theme', next);
+      syncLabel();
+    });
+
+
+    // ─── Navbar brand swap ────────────────────────────────────────────────
+    // When the cover image is fully out of view, "hero-pinned" fades out
+    // the HART brand and fades in "Fabio Antonucci".
+    const navbar = document.getElementById('navbar');
+    const cover  = document.getElementById('cover-gallery');
+
+    if (navbar && cover) {
+      new IntersectionObserver(([entry]) => {
+        navbar.classList.toggle('hero-pinned', !entry.isIntersecting);
+      }, { threshold: 0 }).observe(cover);
+    }
+
+
+    // ─── Live Napoli time in footer ───────────────────────────────────────
+    function tick() {
+      const el = document.getElementById('footer-time');
+      if (!el) return;
+      el.textContent = 'IT · ' + new Date().toLocaleTimeString('en-GB', {
+        timeZone: 'Europe/Rome',
+        hour:     '2-digit',
+        minute:   '2-digit',
+        hour12:   true,
+      });
+    }
+    tick();
+    setInterval(tick, 30000);
+
+
+    // ─── Scroll reveal ────────────────────────────────────────────────────
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+      el.style.transitionDelay = (i % 5) * 0.06 + 's';
+      revealObserver.observe(el);
+    });
+
+
+    // ─── Badge tap-to-show tooltip (mobile) ──────────────────────────────
+    document.querySelectorAll('.life-cert-badge').forEach(badge => {
+      badge.addEventListener('click', e => {
+        const isActive = badge.classList.contains('active');
+        document.querySelectorAll('.life-cert-badge.active').forEach(b => b.classList.remove('active'));
+        if (!isActive) badge.classList.add('active');
+        e.stopPropagation();
+      });
+    });
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.life-cert-badge.active').forEach(b => b.classList.remove('active'));
+    });
+
+
+    // ─── About-me timeline: click-through card stack ─────────────────────
+    (function () {
+      const stackEl = document.querySelector('.tl-stack');
+      if (!stackEl) return;
+
+      const deck    = stackEl.querySelector('.tl-deck');
+      const cards   = Array.from(deck.querySelectorAll('.tl-card-stacked'));
+      const dots    = Array.from(stackEl.querySelectorAll('.tl-dot-btn'));
+      const prevBtn = stackEl.querySelector('.tl-nav-prev');
+      const nextBtn = stackEl.querySelector('.tl-nav-next');
+      const counter = stackEl.querySelector('.tl-counter');
+      const hint    = stackEl.querySelector('.tl-hint');
+      const total   = cards.length;
+      let current   = 0;
+
+      function render() {
+        cards.forEach((card, i) => {
+          const offset = i - current;
+          card.classList.toggle('is-current', offset === 0);
+          card.classList.toggle('is-prev',    offset < 0);
+          card.classList.toggle('is-peek-1',  offset === 1);
+          card.classList.toggle('is-peek-2',  offset === 2);
+          card.classList.toggle('is-peek-3',  offset === 3);
+          card.classList.toggle('is-hidden',  offset > 3);
+          card.setAttribute('aria-hidden', offset === 0 ? 'false' : 'true');
+        });
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('is-active', i === current);
+          dot.classList.toggle('is-seen', i < current);
+          dot.setAttribute('aria-selected', i === current ? 'true' : 'false');
+        });
+        if (counter) counter.textContent = (current + 1) + ' / ' + total;
+        if (prevBtn) prevBtn.disabled = current === 0;
+        if (nextBtn) nextBtn.disabled = current === total - 1;
+        deck.classList.toggle('at-end', current === total - 1);
+        if (hint) hint.textContent = current === total - 1 ? 'That’s the story so far.' : 'Click the card to continue';
+      }
+
+      // Deck is sized once to the tallest card, not per-card — otherwise the
+      // container's height-transition lags behind the (instantly full-height)
+      // incoming card and lets it poke out past the controls row below.
+      function syncDeckHeight() {
+        deck.style.height = Math.max(...cards.map(c => c.offsetHeight)) + 'px';
+      }
+
+      function goTo(index) {
+        current = Math.max(0, Math.min(total - 1, index));
+        render();
+      }
+
+      deck.addEventListener('click', e => {
+        if (e.target.closest('a, .life-cert-badge')) return;
+        if (current < total - 1) goTo(current + 1);
+      });
+
+      deck.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          goTo(current + 1);
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          goTo(current - 1);
+        }
+      });
+
+      prevBtn && prevBtn.addEventListener('click', () => goTo(current - 1));
+      nextBtn && nextBtn.addEventListener('click', () => goTo(current + 1));
+      dots.forEach((dot, i) => dot.addEventListener('click', () => goTo(i)));
+
+      window.addEventListener('resize', syncDeckHeight);
+
+      render();
+      syncDeckHeight();
+    })();
+
+
+    // ─── Scrollspy ────────────────────────────────────────────────────────
+    // Highlights the nav link of the section currently in view. A section
+    // becomes active once its top crosses 35% of the viewport height; at the
+    // very bottom of the page the last section wins regardless.
+    const spyPairs = [...document.querySelectorAll('.nav-links a[href^="#"]')]
+      .map(link => [document.querySelector(link.getAttribute('href')), link])
+      .filter(([section]) => section);
+
+    function updateSpy() {
+      const probe    = window.scrollY + window.innerHeight * 0.35;
+      const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+      let active = null;
+      for (const [section] of spyPairs) {
+        if (section.getBoundingClientRect().top + window.scrollY <= probe) active = section;
+      }
+      if (atBottom && spyPairs.length) active = spyPairs[spyPairs.length - 1][0];
+      for (const [section, link] of spyPairs) {
+        link.classList.toggle('is-active', section === active);
+      }
+    }
+
+    let spyQueued = false;
+    window.addEventListener('scroll', () => {
+      if (spyQueued) return;
+      spyQueued = true;
+      requestAnimationFrame(() => { updateSpy(); spyQueued = false; });
+    }, { passive: true });
+    window.addEventListener('resize', updateSpy, { passive: true });
+    updateSpy();
+
+
+    // ─── Share PocketChop ─────────────────────────────────────────────────
+    // Native share sheet where available, clipboard fallback elsewhere.
+    const shareBtn = document.getElementById('pc-share');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', async () => {
+        const shareData = {
+          title: 'PocketChop — sample slicer & step sequencer for iPad',
+          text:  'PocketChop by Fabio Antonucci — Swift Student Challenge 2026 winner. Sample slicer + 64-step sequencer, built entirely in Swift Playgrounds.',
+          url:   'https://fabioantonucci.com/#pocketchop',
+        };
+        if (navigator.share) {
+          try { await navigator.share(shareData); } catch (e) { /* user cancelled */ }
+        } else {
+          try {
+            await navigator.clipboard.writeText(shareData.url);
+            const prev = shareBtn.textContent;
+            shareBtn.textContent = 'Link copied!';
+            setTimeout(() => { shareBtn.textContent = prev; }, 1800);
+          } catch (e) { /* clipboard unavailable */ }
+        }
+      });
+    }
+
+  </script>
+
+</body>
+</html>
