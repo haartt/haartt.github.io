@@ -1065,11 +1065,19 @@
   ═══════════════════════════════════════ -->
   <nav id="navbar" aria-label="Navigazione del sito">
 
+    <nav id="navbar" aria-label="Navigazione del sito">
     <div class="nav-brand">
-      <img class="nav-logo nav-logo--dark"  src="Resources/hartTee_dark.png"  alt="Logo HART" width="28" height="28" decoding="async">
-      <img class="nav-logo nav-logo--light" src="Resources/hartTee_light.png" alt="Logo HART" width="28" height="28" decoding="async" loading="lazy">
+      <!-- The canvas replaces both static logos. It stores the paths for both dark and light modes. -->
+      <canvas id="logoCanvas" 
+              data-src-dark="Resources/hartTee_dark.png" 
+              data-src-light="Resources/hartTee_light.png" 
+              width="28" height="28" 
+              style="cursor: pointer; display: block;"></canvas>
       <span class="nav-wordmark">HART</span>
     </div>
+    
+</nav>
+
 
     <span class="nav-title" aria-hidden="true">Fabio Antonucci</span>
 
