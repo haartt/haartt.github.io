@@ -1869,7 +1869,7 @@
       const cssW = section.clientWidth;
       const aspect = img.height / img.width;
       const Wpx = Math.max(1, Math.ceil(cssW));
-      const rowsPx = Math.max(1, Math.ceil((Wpx * aspect) / CELL));
+      const rowsPx = Math.max(1, Math.ceil((Wpx * aspect) / CELL) + 1);
       const Hpx = rowsPx * CELL;
       canvas.width = Wpx;
       canvas.height = Hpx;
