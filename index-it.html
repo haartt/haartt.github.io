@@ -268,7 +268,7 @@
       display: block;
       width:   100%;
       height:  auto;
-      cursor:  none;
+      cursor:  default;
     }
 
     /* ─────────────────────────────────────────
@@ -1970,26 +1970,21 @@
       }
     }
 
-    ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(small, 0, 0, W, H);
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(img, 0, 0, W, H);
 
-    ctx.fillStyle = 'transparent';
+    // Pixelated artwork sits above full-resolution artwork. Erasing a cell
+    // lowers its overlay opacity, revealing the unpixelated image beneath.
+    ctx.imageSmoothingEnabled = false;
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
         const i = y * cols + x;
-        if (alpha[i] >= 1) continue;
-        ctx.globalAlpha = 1 - alpha[i];
-        ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
+        if (alpha[i] <= 0) continue;
+        ctx.globalAlpha = alpha[i];
+        ctx.drawImage(small, x, y, 1, 1, x * CELL, y * CELL, CELL, CELL);
       }
     }
     ctx.globalAlpha = 1;
-
-    if (lastX !== undefined) {
-      ctx.fillStyle = '#fff';
-      ctx.beginPath();
-      ctx.arc(lastX, lastY, 4, 0, Math.PI * 2);
-      ctx.fill();
-    }
 
     requestAnimationFrame(frame);
   }
