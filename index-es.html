@@ -263,16 +263,13 @@
     /* ─────────────────────────────────────────
        COVER IMAGE
     ───────────────────────────────────────── */
-    #cover-gallery { width: 100%; }
-    .cover-image {
+    #cover-gallery { width: 100%; line-height: 0; }
+    #pixelCanvas {
       display: block;
       width:   100%;
       height:  auto;
+      cursor:  default;
     }
-    .cover-light { display: none;  }
-    .cover-dark  { display: block; }
-    [data-theme="light"] .cover-light { display: block; }
-    [data-theme="light"] .cover-dark  { display: none;  }
 
     /* ─────────────────────────────────────────
        PAGE SHELL — everything sits in a centred
@@ -1094,8 +1091,7 @@
        COVER IMAGE
   ═══════════════════════════════════════ -->
   <section id="cover-gallery" aria-label="Portada">
-    <img src="Resources/artworkLight.png" class="cover-image cover-light" alt="Artwork — versión clara" decoding="async" loading="lazy">
-    <img src="Resources/artworkDark.png"  class="cover-image cover-dark"  alt="Artwork — versión oscura" decoding="async" fetchpriority="high">
+    <canvas id="pixelCanvas"></canvas>
   </section>
 
 
@@ -1651,6 +1647,7 @@
       const next = root.dataset.theme === 'light' ? 'dark' : 'light';
       root.dataset.theme = next;
       localStorage.setItem('fa-theme', next);
+      if (window.setPixelTheme) window.setPixelTheme(next);
       syncLabel();
     });
 
@@ -1843,6 +1840,136 @@
       });
     }
 
+  </script>
+
+  <script>
+  (() => {
+    const IMAGES = {
+      light: 'Resources/artworkLight.png',
+      dark:  'Resources/artworkDark.png'
+    };
+    const CELL = 24;
+    const DISAPPEAR_MS = 350;
+    const REAPPEAR_STAGGER_MS = 500;
+    const IDLE_MS = 800;
+    const MAX_W = 1600;
+
+    const section = document.getElementById('cover-gallery');
+    const canvas = document.getElementById('pixelCanvas');
+    if (!section || !canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    let cols, rows, W, H, small, smallCtx, img;
+    let state, phaseStart, alphaAtStart, alpha, touchTime, reappearAt;
+    let lastMoveTime = 0, running = false;
+
+    const VISIBLE = 0, ERASING = 1, ERASED = 2, WAITING_REAPPEAR = 3;
+
+    function layout() {
+      const cssW = section.clientWidth;
+      const aspect = img.height / img.width;
+      const cssH = cssW * aspect;
+      canvas.style.height = cssH + 'px';
+      canvas.width = cssW;
+      canvas.height = cssH;
+      W = cssW; H = cssH;
+      cols = Math.max(1, Math.ceil(W / CELL));
+      rows = Math.max(1, Math.ceil(H / CELL));
+      const n = cols * rows;
+      state = new Uint8Array(n);
+      phaseStart = new Float32Array(n);
+      alphaAtStart = new Float32Array(n).fill(1);
+      alpha = new Float32Array(n).fill(1);
+      touchTime = new Float32Array(n);
+      reappearAt = new Float32Array(n);
+      small = document.createElement('canvas');
+      small.width = cols; small.height = rows;
+      smallCtx = small.getContext('2d');
+      smallCtx.drawImage(img, 0, 0, cols, rows);
+    }
+
+    function loadImage(theme) {
+      return fetch(IMAGES[theme])
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.blob(); })
+        .then(blob => createImageBitmap(blob, { resizeWidth: MAX_W, resizeQuality: 'medium' }))
+        .then(bitmap => {
+          img = bitmap;
+          layout();
+          if (!running) { running = true; requestAnimationFrame(frame); }
+        })
+        .catch(e => console.error('Image load failed:', e));
+    }
+
+    window.setPixelTheme = theme => {
+      if (theme === 'light' || theme === 'dark') loadImage(theme);
+    };
+    loadImage(document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
+    addEventListener('resize', () => { if (img) layout(); });
+
+    function eraseAt(px, py) {
+      if (!cols) return;
+      const cx = px / CELL | 0, cy = py / CELL | 0, now = performance.now();
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        const x = cx + dx, y = cy + dy;
+        if (x < 0 || y < 0 || x >= cols || y >= rows) continue;
+        const i = y * cols + x;
+        if (state[i] === ERASING || state[i] === ERASED) continue;
+        state[i] = ERASING;
+        phaseStart[i] = now;
+        alphaAtStart[i] = alpha[i];
+        touchTime[i] = now;
+      }
+    }
+
+    function triggerReappear() {
+      const now = performance.now();
+      let minT = Infinity, maxT = -Infinity;
+      for (let i = 0; i < state.length; i++) {
+        if (state[i] === ERASING || state[i] === ERASED) {
+          minT = Math.min(minT, touchTime[i]);
+          maxT = Math.max(maxT, touchTime[i]);
+        }
+      }
+      const span = Math.max(1, maxT - minT);
+      for (let i = 0; i < state.length; i++) {
+        if (state[i] === ERASING || state[i] === ERASED) {
+          state[i] = WAITING_REAPPEAR;
+          reappearAt[i] = now + ((touchTime[i] - minT) / span) * REAPPEAR_STAGGER_MS;
+        }
+      }
+    }
+
+    canvas.addEventListener('pointermove', e => {
+      const rect = canvas.getBoundingClientRect();
+      eraseAt((e.clientX - rect.left) * canvas.width / rect.width, (e.clientY - rect.top) * canvas.height / rect.height);
+      lastMoveTime = performance.now();
+    });
+    canvas.addEventListener('click', triggerReappear);
+
+    function frame(now) {
+      if (now - lastMoveTime > IDLE_MS) triggerReappear();
+      for (let i = 0; i < state.length; i++) {
+        if (state[i] === ERASING) {
+          const t = (now - phaseStart[i]) / DISAPPEAR_MS;
+          if (t >= 1) { alpha[i] = 0; state[i] = ERASED; }
+          else alpha[i] = alphaAtStart[i] * (1 - t);
+        } else if (state[i] === WAITING_REAPPEAR && now >= reappearAt[i]) {
+          alpha[i] = 1; state[i] = VISIBLE;
+        }
+      }
+      ctx.imageSmoothingEnabled = true;
+      ctx.drawImage(img, 0, 0, W, H);
+      ctx.imageSmoothingEnabled = false;
+      for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+        const i = y * cols + x;
+        if (alpha[i] <= 0) continue;
+        ctx.globalAlpha = alpha[i];
+        ctx.drawImage(small, x, y, 1, 1, x * CELL, y * CELL, CELL, CELL);
+      }
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(frame);
+    }
+  })();
   </script>
 
 </body>
