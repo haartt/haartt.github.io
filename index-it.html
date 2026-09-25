@@ -1870,9 +1870,9 @@
     const cssH = cssW * aspect;
 
     canvas.style.height = cssH + 'px';
-    canvas.width = cssW;
-    canvas.height = cssH;
-    W = cssW; H = cssH;
+    canvas.width = Math.ceil(cssW);
+    canvas.height = Math.ceil(cssH);
+    W = canvas.width; H = canvas.height;
 
     cols = Math.max(1, Math.ceil(W / CELL));
     rows = Math.max(1, Math.ceil(H / CELL));
