@@ -1961,7 +1961,7 @@
       ctx.imageSmoothingEnabled = true;
       ctx.drawImage(img, 0, 0, W, H);
       ctx.imageSmoothingEnabled = false;
-      for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+      for (let y = 0; y < rows - 1; y++) for (let x = 0; x < cols; x++) {
         const i = y * cols + x;
         if (alpha[i] <= 0) continue;
         ctx.globalAlpha = alpha[i];
