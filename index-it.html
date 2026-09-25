@@ -1864,18 +1864,19 @@
   const VISIBLE = 0, ERASING = 1, ERASED = 2, WAITING_REAPPEAR = 3;
 
   function layout() {
-    // il canvas segue la larghezza della sezione; l'altezza rispetta l'aspect ratio reale dell'immagine
+    // il canvas segue la larghezza della sezione; l'altezza include una riga pixel completa
     const cssW = section.clientWidth;
-    const aspect = img.naturalHeight / img.naturalWidth;
-    const cssH = cssW * aspect;
+    const aspect = img.height / img.width;
+    const Wpx = Math.max(1, Math.ceil(cssW));
+    const rowsPx = Math.max(1, Math.ceil((Wpx * aspect) / CELL));
+    const Hpx = rowsPx * CELL;
 
-    canvas.style.height = cssH + 'px';
-    canvas.width = Math.ceil(cssW);
-    canvas.height = Math.ceil(cssH);
+    canvas.width = Wpx;
+    canvas.height = Hpx;
     W = canvas.width; H = canvas.height;
 
     cols = Math.max(1, Math.ceil(W / CELL));
-    rows = Math.max(1, Math.ceil(H / CELL));
+    rows = rowsPx;
     const n = cols * rows;
     state = new Uint8Array(n);
     phaseStart = new Float32Array(n);

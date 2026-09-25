@@ -1868,13 +1868,14 @@
     function layout() {
       const cssW = section.clientWidth;
       const aspect = img.height / img.width;
-      const cssH = cssW * aspect;
-      canvas.style.height = cssH + 'px';
-      canvas.width = Math.ceil(cssW);
-      canvas.height = Math.ceil(cssH);
+      const Wpx = Math.max(1, Math.ceil(cssW));
+      const rowsPx = Math.max(1, Math.ceil((Wpx * aspect) / CELL));
+      const Hpx = rowsPx * CELL;
+      canvas.width = Wpx;
+      canvas.height = Hpx;
       W = canvas.width; H = canvas.height;
       cols = Math.max(1, Math.ceil(W / CELL));
-      rows = Math.max(1, Math.ceil(H / CELL));
+      rows = rowsPx;
       const n = cols * rows;
       state = new Uint8Array(n);
       phaseStart = new Float32Array(n);
